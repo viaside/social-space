@@ -1,0 +1,328 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  background-color: #1E1E1E;
+  font-family: Verdana;
+  margin: 0;
+  padding: 0;
+}
+
+/* styles component */
+.NavBar{
+  background-color: #353535;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.9),0 0px 2px rgba(0, 0, 0, 0.9);
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.NavBar a{
+  text-decoration: none;
+  padding: 20px;
+  font-size: 18px;
+  color: #EFEFF1;
+}
+
+.Chat{
+  display: flex;
+  flex-direction: row;
+}
+
+.Chat h1{
+  text-align: center;
+}
+
+.Chat p{
+  padding: 5px;
+}
+
+.ChatListAll{
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.9),0 0px 2px rgba(0, 0, 0, 0.9);
+
+}
+
+.ChatList{
+  display: inline-flex;
+  align-items: center;
+  width: 350px;
+  height: 100px;
+  color: white;
+  border-bottom: 1px solid #716F6F;
+  padding: 10px;
+}
+
+.avatar{
+  border-radius: 100px;
+  margin: 5px;
+}
+
+.ChatList img{
+  border-radius: 50px;
+}
+
+.ChatList .text{
+  padding-left: 20px;
+  width: 100%;
+  height: 100%;
+}
+
+.ChatElement {
+  background-color: #1f1f23;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.9),0 0px 2px rgba(0, 0, 0, 0.9);
+  padding: 20px;
+  width: 10vw;
+}
+
+.OpenChat {
+  background-color: #353535;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.9),0 0px 2px rgba(0, 0, 0, 0.9);
+  padding: 10px;
+  width: 100vw;
+  height: 92.5vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.AllMessageChat{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #353535;
+}
+
+.ChatInfo {
+  overflow: auto;
+  height: 73vh;
+  display: flex;
+  flex-direction: column;
+  scroll-behavior: smooth;
+}
+
+.ChatInfo::-webkit-scrollbar {
+  width: 1em;
+}
+
+.ChatInfo::-webkit-scrollbar-track {
+}
+
+.ChatInfo::-webkit-scrollbar-thumb {
+  background-color: #3D3D3D;
+  border-radius: 100px;
+}
+
+.ChatAnswerElement {
+  width: 250px;
+  padding: 5px;
+  margin: 20px;
+  align-self: flex-end;
+  background-color: #3D3D3D;
+  border-radius: 5px;
+}
+
+
+.ChatInfoElement {
+  text-align: right;
+  width: 250px;
+  padding: 5px;
+  margin: 20px;
+  background-color: #3D3D3D;
+  border-radius: 5px;
+}
+
+.ChatInfoElementMessage{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.text{
+  text-align: left;
+}
+
+.time{
+  text-align: right;
+}
+
+.answer {
+  display: flex;
+  position: absolute;
+  bottom: 40px;
+  left: 150px;
+  right: 150px;
+}
+
+.buttons{
+  display: flex;
+  flex-direction: column;
+}
+
+.lastMessage{
+  background-color: rgba(217, 217, 217, 0.05);
+  width: 93%;
+  height: 50%;
+}
+
+.userName{
+  font-size: 20px;
+}
+
+.Buttons{
+  display: flex;
+  flex-direction: column;
+  align-self: flex-end;
+}
+
+.form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.GroupMessage{
+  background-color: #353535;
+  width: 61.4vw;
+}
+
+.GroupMessageInfo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.groupBlockChat{
+  border: 2px solid #3D3D3D;
+  border-radius: 20px;
+  height: 55vh;
+  margin: 10px;
+}
+
+.GroupMessageText{
+  background-color: #3D3D3D;
+  padding: 10px;
+  width: 250px;
+  background-color: #3D3D3D;
+}
+
+.groupAnswerComment{
+  display: flex;
+  justify-content: center;
+}
+
+.groupAnswerComment input{
+  width: 250px;
+}
+
+.groupMessage{
+  width: 250px;
+  padding: 5px;
+  margin: 20px;
+  align-self: flex-end;
+  background-color: #3D3D3D;
+  border-radius: 5px;
+}
+
+.close{
+  width: 99%;
+}
+
+.fullScreenImage{
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 94%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.fullScreenImage img{
+  position: absolute;
+  top: 20px;
+  left: 50vw;
+  right: 50vw;
+  height: 90vh;
+}
+
+/* styles element*/
+p{
+  font-size: 14px;
+  color: #EFEFF1;
+}
+h1 {
+  font-size: 18px;
+  color: #f1f1f5;
+  padding: 15px;
+  text-align: center;
+}
+
+input {
+  width: 750px;
+  height: 30px;
+  padding: 5px;
+  background-color: #353535;
+  color: white;
+  border: 2px solid #5A5A5A;
+  border-radius: 8px;
+  animation: show2 0.5s 1;
+}
+
+
+input:focus{
+  background-color: rgb(15, 15, 15);
+  animation: show1 0.5s 1;
+}
+
+
+@keyframes show1{
+  0%{
+  opacity:0;
+  }
+  100% {
+  opacity:1;
+  }
+}
+@keyframes show2{
+  0%{
+  opacity:0;
+  }
+  100% {
+  opacity:1;
+  }
+}
+
+button {
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 0;
+  background-color: #5c16c5;
+  color: #EFEFF1;
+  width: 120px;
+  height: 40px;
+}
+
+form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inputLogin{
+  background-color: #FFFFFF29;
+  color: #EFEFF1;
+  width: 20vw;
+  height: 3vh;
+  border-radius: 5px;
+  resize: none;
+  animation: show2 0.5s 1;
+}
+
+label{
+  font-size: 14px;
+  color: #EFEFF1;
+}
