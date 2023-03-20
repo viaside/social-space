@@ -171,6 +171,24 @@ namespace web_app.Controllers
             }
         }
 
+        
+        [Route("ChangeInfo")]
+        [HttpPut]
+        public IActionResult ChangeInfo([FromBody] UserInfoModel model)
+        {
+            ResponseType type = ResponseType.Success;
+
+            try
+            {
+                _db.ChangeInfo(model);
+                return Ok(ResponseHandler.GetAppResponse(type, "success"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
+
         [Route("AddBot/{UserId}&{BotId}")]
         [HttpPost("{UserId}&{BotId}")]
         public async Task<IActionResult> AddBot(int UserId, string BotId)

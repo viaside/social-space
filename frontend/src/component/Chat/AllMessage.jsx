@@ -1,7 +1,5 @@
 import convertDate from "../../features/convertDate";
-import getProfilePhoto from "../../features/getProfilePhoto";
 import { useSelector } from 'react-redux';
-import { useState } from "react";
 
 export default function AllMessage(props) {
     const openChat = useSelector((state) => state.openChat.value)
@@ -35,28 +33,39 @@ export default function AllMessage(props) {
         };
     }
 
+    const nullAvatar = (username) => {
+        let img = document.getElementById("allchat");
+        console.log(img);
+        img.outerHTML = "<p className='chatAvatarNull'>" + username[0].toUpperCase() + "</p>";
+    }
+
     if(openChat === false){
         return null
     } else{
         return(
-            <div className = "AllMessageChat">   
-                <img src={userPhoto} alt="av" width={120} className="avatar"/>
+            <div className = "AllMessageChat">  
+                <div className="avatar">
+                    <img id="allchat" src={userPhoto} alt="av" width={120} onError={()=>{nullAvatar(idChat)}}/>
+                </div> 
                 <h1>{ idChat }</h1>
                 <p>Все сообщения в группах:</p>
                 <div className = "ChatInfo" id="ChatInfo2" >
-                    {message.reverse().map(data => {
-                        if(data[0] !== undefined){
+                    {message.reverse().map((data, index) => {
+                        if(data[0]){
                             return (
-                                <div className = "ChatInfoElement" key={data[3]}> 
+                                <div className = "ChatInfoElement" key={index}> 
                                     <div className = "ChatInfoElementMessage">
                                         <p className = "text">В - { data[6] }</p>
-                                        <img src={ data[8] } alt="" />
+                                        <img src={ data[8] } alt=""/>
                                         <p className = "text">{ data[0] }</p>
                                         <p className = "time">{ data[1] }</p>
                                     </div>
                                 </div>
-                            )
-                    }})}
+                        )
+                        } else{
+                            return null
+                        }   
+                    })}
                 </div>
             </div>
         );

@@ -9,7 +9,7 @@ export default function GroupList(props) {
   
     let group = [];
 
-    if(props.data != null){
+    if(props.data){
         props.data.sort(function(a,b){
             if(a.date < b.date){
                 return 1;
@@ -24,16 +24,33 @@ export default function GroupList(props) {
             }
         });
     }
+
+    const activeGroup = async (id) => {
+        for(let i = 0; i <= group.length; i++){
+            let element = await document.getElementById(i);
+            let elementMessage = await document.getElementById("message"+i);
+            if(element && elementMessage){
+                if(id === i){
+                    element.style.backgroundColor = await "#353535";
+                } else{
+                    element.style.backgroundColor = null;
+                }
+            }
+            elementMessage.style.backgroundColor = null;
+        }
+    }
+
     return(
         <div className='ChatListAll'>
             {group.filter((element, index) => {
                 return group.indexOf(element) === index;
-            }).map(data => {
+            }).map((data, index) => {
                 return (
-                    <div className="ChatList" onClick = {() => {
+                    <div className="ChatList" id={index} key={index} onClick = {() => {
                         dispatch(open());
                         dispatch(close());
                         dispatch(setIdChat(data));
+                        activeGroup(index);
                     }}>
                         <h1>{ data }</h1>
                     </div>

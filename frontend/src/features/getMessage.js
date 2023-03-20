@@ -12,12 +12,11 @@ export default async function getMessage() {
         const response = await fetch("https://localhost:7013/api/telegram/getMessage/" + id);
         const message = await response.json();
 
-        if(Result[0] != undefined){
+        if(Result[0] !== undefined){
             Result = [...Result, ...message.responseData.reverse()];
         } else{
             Result = message.responseData.reverse();
         }
-        console.log(id);
     }
     return Result;
 }

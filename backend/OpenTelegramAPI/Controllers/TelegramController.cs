@@ -40,8 +40,6 @@ namespace OpenTelegramAPI.Contollers
                 data = await response.Content.ReadAsStringAsync();
                 JObject result = JObject.Parse(data);
 
-
-
                 for(int i = 0; i < result["result"]?.LongCount(); i++)
                 {
                     MessageInfoModel messageInfoModel = new MessageInfoModel();
@@ -50,6 +48,7 @@ namespace OpenTelegramAPI.Contollers
                     string FilePath;
                     string FilePathMessage;
                     string pathGetMessagePhoto;
+                    string pathGetAvatar;
 
                     //Get user photo id
                     string pathGetPhotoId = "https://api.telegram.org/bot" + botId + "/getUserProfilePhotos?user_id=" 
@@ -59,19 +58,26 @@ namespace OpenTelegramAPI.Contollers
                     string dataId = await responseId.Content.ReadAsStringAsync();
                     JObject resultId = JObject.Parse(dataId);
 
-                    FileId = resultId["result"]?["photos"]?[0]?[2]?["file_id"]?.ToString();
 
-                    //Get path file
-                    string pathGetFile = "https://api.telegram.org/bot" + botId + "/getFile?file_id=" + FileId;
-                    using HttpResponseMessage responseFile = await client.GetAsync(pathGetFile);
-                    string dataFile = await responseFile.Content.ReadAsStringAsync();
-                    JObject resultFile = JObject.Parse(dataFile);
+                    if(resultId["result"]?["total_count"]?.ToString() != "0"){
+                        FileId = resultId["result"]?["photos"]?[0]?[2]?["file_id"]?.ToString();
 
-                    FilePath = resultFile["result"]?["file_path"]?.ToString();
-                    //Get Avatar
-                    string pathGetAvatar = "https://api.telegram.org/file/bot" + botId + "/" + FilePath;
+                        string pathGetFile = "https://api.telegram.org/bot" + botId + "/getFile?file_id=" + FileId;
+                        using HttpResponseMessage responseFile = await client.GetAsync(pathGetFile);
+                        string dataFile = await responseFile.Content.ReadAsStringAsync();
+                        JObject resultFile = JObject.Parse(dataFile);
+
+                        FilePath = resultFile["result"]?["file_path"]?.ToString();
+
+                        pathGetAvatar = "https://api.telegram.org/file/bot" + botId + "/" + FilePath;
+                    }
+                    else{
+                        pathGetAvatar = null;
+                    }
 
 
+
+    
                     //get filephoto chat
                     if (result["result"]?[i]?["message"]?["photo"]?.ToString() != null)
                     {
@@ -144,22 +150,23 @@ namespace OpenTelegramAPI.Contollers
         }
 
 
-        [Route("SendMessage/{botId}&{chatId}&{text}&{messageId}")]
-        [HttpPost("{botId}&{chatId}&{text}&messageId")]
-        public async Task<string> SendMessage(string botId,string chatId, string text, string messageId)
+        [Route("SendMessage")]
+        [HttpPost]
+        public async Task<IActionResult> SendMessage(SendMessage sendMessage)
         {
             try
             {
-                string path = "https://api.telegram.org/bot" + botId + "/sendMessage?chat_id=" + chatId + "&text=" + text + "&reply_to_message_id=" + messageId;
+                string path = "https://api.telegram.org/bot" + sendMessage.BotId + "/sendMessage?chat_id=" + sendMessage.ChatId + "&text=" + sendMessage.Text + "&reply_to_message_id=" + sendMessage.MessageId;
                 using HttpResponseMessage response = await client.GetAsync(path);
                 MessageInfoModel messageInfoModel = new MessageInfoModel();
-                messageInfoModel.MessageId = messageId;
-                _db.AddAnswer(messageInfoModel, text);
-                return await response.Content.ReadAsStringAsync();
+                messageInfoModel.MessageId = sendMessage.MessageId;
+                _db.AddAnswer(messageInfoModel, sendMessage.Text);
+                ResponseType type = ResponseType.Success;
+                return Ok(ResponseHandler.GetAppResponse(type, sendMessage));
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
         }
 

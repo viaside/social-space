@@ -1,4 +1,5 @@
 import convertDate from "../../features/convertDate";
+import getCookie from "../../features/getCookie";
 import { useSelector, useDispatch } from 'react-redux';
 import { close } from '../../features/redux/openMessageSlice';
 import { useState } from "react";
@@ -20,15 +21,46 @@ export default function GroupOpen(props) {
                 message.push(data);
             }
         });
-        
     }
     
-    const sendMessage = () => {
-        fetch("https://localhost:7013/api/telegram/sendMessage/" + message[0][2] + "&" + Answer + "&" + message[0][3]);
+    const sendMessage = async () => {
+        if(Answer){
+            let botId = await fetch('https://localhost:7013/api/user/GetInfo/' + getCookie("userId"))
+            .then((Response) => Response.json())
+            .then(async (Result) => { return Result.responseData["usingBots"].toString().split('----')[0] });
+    
+            let element = document.getElementById("message");
+            element.value = "";
+            setAnswer(null);
+
+            await fetch("https://localhost:7013/api/telegram/sendMessage/", { 
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    BotId: botId.toString(), 
+                    ChatId: message[message.length-1][2].toString(), 
+                    MessageId: message[message.length-1][3].toString(),
+                    Text: Answer.toString(), 
+                })
+            });
+        } else{
+            alert("Напишите ответ")
+        }
     }
 
-    const sendComment = () => {
-        fetch("https://localhost:7013/api/telegram/AddComment/" + message[0][3] + "&" + Comment);
+    const sendComment = async () => {
+        if(Comment){
+            fetch("https://localhost:7013/api/telegram/AddComment/" + message[0][3] + "&" + Comment);
+    
+            let element = document.getElementById("comment");
+            element.value = "";
+            setComment(null)
+        } else{
+            alert("Напишите комментарий")
+        }
     }
     
     const textHandlerAnswer = (event) => {
@@ -38,6 +70,18 @@ export default function GroupOpen(props) {
     const textHandlerComent = (event) => {
         setComment(event.target.value);
     }
+
+    const handleKeyPressAnswer = (e) => {
+        if(e.key === "Enter"){
+            sendMessage();
+        }
+    } 
+
+    const handleKeyPressComment = (e) => {
+        if(e.key === "Enter"){
+            sendComment();
+        }
+    } 
 
     
     if(openMessage === false){
@@ -54,7 +98,7 @@ export default function GroupOpen(props) {
                         <div className="GroupMessageText">
                             <p>{ message[0][0] }</p>
                             <img src={ message[0][8] } alt="" width={80} onClick={() => setShowFullScreenImage(!showfullScreenImage)} />
-                            <p>{ message[0][1] }</p>
+                            <p className="time">{ message[0][1] }</p>
                         </div>
                     </div>
                 </div>
@@ -62,32 +106,36 @@ export default function GroupOpen(props) {
                     <div>
                         <h1>Ответы</h1>
                         <div className="groupBlockChat">
-                            { message[0][5] != undefined ? message[0][5].reverse().map((answer) => {
+                            { message[0][5]? message[0][5].reverse().map((answer, index) => {
                                 return(
-                                    <div className="groupMessage">
+                                    <div className="groupMessage" key={index}>
                                         <p className = "text">{ answer.split('/')[0] }</p>
                                         <p className = "time">{ answer.split('/')[1] }</p>
                                     </div>
                                 )
                             }) : null}
                         </div>
-                        <input onChange={(event) => textHandlerAnswer(event) } name="message" id="message" placeholder="Напишите ответ..."></input>
-                        <button onClick={() => sendMessage()}>Ответить</button>
+                        <div>
+                            <input onChange={(event) => textHandlerAnswer(event) } onKeyDown={handleKeyPressAnswer} name="message" id="message" placeholder="Напишите ответ..."></input>
+                            <button onClick={() => sendMessage()}>Ответить</button>
+                        </div>
                     </div>
                     <div>
                         <h1>Комментарий</h1>
                         <div className="groupBlockChat">
-                            { message[0][6] != undefined ? message[0][6].reverse().map((comments) => {
+                            { message[0][6]? message[0][6].reverse().map((comments, index) => {
                                 return(
-                                    <div className="groupMessage">
+                                    <div className="groupMessage" key={index}>
                                         <p className = "text">{ comments.split('/')[0] }</p>
                                         <p className = "time">{ comments.split('/')[1] }</p>
                                     </div>
                                 )
                             }) : null}
                         </div>
-                        <input onChange={(event) => textHandlerComent(event) } name="message" id="message" placeholder="Напишите комментарий..."></input>
-                        <button onClick={() => sendComment()}>Написать комментарий</button>
+                        <div className="answer">
+                            <input onChange={(event) => textHandlerComent(event) } onKeyDown={handleKeyPressComment} name="comment" id="comment" placeholder="Напишите комментарий..."></input>
+                            <button onClick={() => sendComment()}>Написать комментарий</button>
+                        </div>
                     </div>
                 </div>
                 <button onClick={() => dispatch(close())} className="close">Закрыть</button>

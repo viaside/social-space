@@ -33,16 +33,30 @@ export default function GroupOpenMessage(props) {
         });
     }
 
+    const activeMessage = async (id) => {
+        for(let i = 0; i <= Message.length; i++){
+            let element = document.getElementById("message"+i);
+            if(element){
+                if(id === "message"+i){
+                    element.style.backgroundColor = "#353535";
+                } else{
+                    element.style.backgroundColor = null;
+                }
+            }
+        }
+    }
+
     if(openChat === true){
         return(
             <div className='ChatListAll'>
             {Message.filter((element, index) => {
                 return Message.indexOf(element) === index;
-            }).map(data => {
+            }).map((data, index) => {
                 return (
-                    <div className="ChatList" key = {Message.indexOf(data)} onClick = {() => {
+                    <div className="ChatList" id={"message"+index} key = {index} onClick = {() => {
                         dispatch(open());
                         dispatch(setMessageChat(data[3]));
+                        activeMessage("message"+index)
                     }}>
                         <div className='avatar'>
                             <img src={ data[7] } alt="avatar" width={70}/>

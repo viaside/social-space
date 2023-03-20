@@ -91,6 +91,19 @@ namespace web_app.Model
             _context.SaveChanges();
         }
         
+
+        public void ChangeInfo(UserInfoModel usersInfoModel)
+        {
+            UsersInfo dbTable = new UsersInfo();
+            dbTable = _context.UserInfo.Where(d => d.Id.Equals(usersInfoModel.Id)).FirstOrDefault();
+            if (dbTable != null)
+            {
+                dbTable.Login = usersInfoModel.Login;
+                dbTable.Password = usersInfoModel.Password;
+            }
+            _context.SaveChanges();
+        }
+
         public void DeleteUser(int id)
         {
             _context.UserInfo.Remove(_context.UserInfo.Single(a => a.Id == id));
@@ -263,13 +276,13 @@ namespace web_app.Model
                 if(dbTable.Answers != null)
                 {
                     string[] stringsDB = dbTable.Answers;
-                    string[] strings = { text + "/" + DateTime.Now.ToString() };
+                    string[] strings = { text + "/" + DateTime.Now.ToString("h:m:ss dd/MM/yy") };
                     string[] strings1 = strings!.Concat(stringsDB).ToArray();
                     dbTable.Answers = strings1;
                 }
                 else
                 {
-                    string[] strings = { text + "/" + DateTime.Now.ToString()};
+                    string[] strings = { text + "/" + DateTime.Now.ToString("h:m:ss dd/MM/yy")};
                     dbTable.Answers = strings;
                 }
             }
@@ -285,13 +298,13 @@ namespace web_app.Model
                 if (dbTable.Comments != null)
                 {
                     string[] stringsDB = dbTable.Comments;
-                    string[] strings = { text + "/" + DateTime.Now.ToString() };
+                    string[] strings = { text + "/" + DateTime.Now.ToString("h:m:ss dd/MM/yy") };
                     string[] strings1 = strings!.Concat(stringsDB).ToArray();
                     dbTable.Comments = strings1;
                 }
                 else
                 {
-                    string[] strings = { text + "/" + DateTime.Now.ToString() };
+                    string[] strings = { text + "/" + DateTime.Now.ToString("h:m:ss dd/MM/yy") };
                     dbTable.Comments = strings;
                 }
             }
