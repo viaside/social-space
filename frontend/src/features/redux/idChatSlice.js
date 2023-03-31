@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 export const idChatSlice = createSlice({
-  name: 'idChat',
+  name: 'idPanelProfile',
   initialState: {
     value: null,
   },

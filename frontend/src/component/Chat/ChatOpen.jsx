@@ -17,7 +17,7 @@ export default function ChatOpen(props) {
     if(props.data != null){
         props.data.forEach(element => {
             if(element.username === idChat && element.type === "private"){
-                let data = [element.text, convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.textPhotos];
+                let data = [element.text, convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.textPhoto];
                 message.push(data);
             }
         });
@@ -78,14 +78,14 @@ export default function ChatOpen(props) {
     } else{
         return(
             <div className="OpenChat">   
-                <h1>{idChat}</h1>
+                <h1>Чат с {idChat}</h1>
                 <div id="ChatInfo" className="ChatInfo">
                     {message.reverse().map((data, index) => { 
                         return (
                             <div key = {index} >
                                 <div className = "ChatInfoElement"> 
                                     <div className="ChatInfoElementMessage">
-                                        <img src={ data[6] } alt="" />
+                                        <img src={"data:image/jpeg;base64," + data[6] } alt="" />
                                         <p className="text">{ data[0] }</p>
                                         <p className="time">{ data[1] }</p>
                                     </div>

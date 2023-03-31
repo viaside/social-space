@@ -3,8 +3,13 @@ import Group from './pages/Group';
 import Channel from './pages/Channel';
 import Stats from './pages/Stats';
 import Profile from './pages/Profile'
+import Main from './pages/Main';
 
 const AppRoutes = [
+    {
+        path: '/',
+        element: <Main />
+    },
     {
         path: '/Chat',
         element: <Chat />

@@ -19,17 +19,37 @@ export default class Profile extends Component {
     
     async componentDidMount() {
         await this.setState({ isLogin: getCookie("isLogin") });
+        let elInfo = document.getElementById("info")
+        elInfo.style.backgroundColor = "#1E1E1E";
     }
 
     openInfo(){
         this.setState({Element: <AccountInfo/>})
+        let elInfo = document.getElementById("info")
+        let elBots = document.getElementById("bots")
+        let elSetting = document.getElementById("setting")
+        elInfo.style.backgroundColor = "#1E1E1E";
+        elBots.style.backgroundColor = "#353535";
+        elSetting.style.backgroundColor = "#353535";
     }
     openBots(){
         this.setState({Element: <AccountBots/>})
+        let elInfo = document.getElementById("info")
+        let elBots = document.getElementById("bots")
+        let elSetting = document.getElementById("setting")
+        elInfo.style.backgroundColor = "#353535";
+        elBots.style.backgroundColor = "#1E1E1E";
+        elSetting.style.backgroundColor = "#353535";
     }
     
     openSetting(){
         this.setState({Element: <AccountSetting/>})
+        let elInfo = document.getElementById("info")
+        let elBots = document.getElementById("bots")
+        let elSetting = document.getElementById("setting")
+        elInfo.style.backgroundColor = "#353535";
+        elBots.style.backgroundColor = "#353535";
+        elSetting.style.backgroundColor = "#1E1E1E";
     }
 
     render() {
@@ -37,13 +57,17 @@ export default class Profile extends Component {
             return(
                 <div className="account">
                     <div className="accountPanel">
-                        <div onClick={this.openInfo}>
+                        <div className="UserInfoPanel">
+                            <p className="accountAvatar">{getCookie("username")[0].toUpperCase()}</p>
+                            <h1>{getCookie("username")}</h1>
+                        </div>
+                        <div onClick={this.openInfo} id="info">
                             <h1>Основная информация</h1>
                         </div>
-                        <div onClick={this.openBots}>
-                            <h1>Добавленые боты</h1>
+                        <div onClick={this.openBots} id="bots">
+                            <h1>Добавленные боты</h1>
                         </div>
-                        <div onClick={this.openSetting}>
+                        <div onClick={this.openSetting} id="setting">
                             <h1>Настройки</h1>
                         </div>
                     </div>

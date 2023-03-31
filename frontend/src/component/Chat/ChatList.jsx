@@ -16,7 +16,7 @@ export default function ChatList(props) {
                 return 0;
             }).forEach(element => {
                 if(element.type === "private"){
-                    chats.push(element.username + "----" + element.userPhoto);
+                    chats.push(element.username + "----" + element.userAvatar);
                     lastMessage.push(element.text);
                 }
         });
@@ -40,6 +40,7 @@ export default function ChatList(props) {
         img.outerHTML = "<p id=" + id +" className='chatAvatarNull'>" + username[0].toUpperCase() + "</p>";
     }
 
+
     return(
         <div className='ChatListAll'>   
             {chats.sort().filter((element, index, arr) => {
@@ -52,11 +53,12 @@ export default function ChatList(props) {
                         activeChat(chats.indexOf(data));
                     }}>
                         <div className='avatar'>
-                            <img id={index+"img"} src={ data.split('----')[1] } alt="avatar" width={70} onError={()=>{nullAvatar(index, data.split('----')[0])}}/>
+                            <img id={index+"img"} src={ "data:image/jpeg;base64," + data.split('----')[1] }
+                             alt="avatar" width={80} onError={()=>{nullAvatar(index, data.split('----')[0])}}/>
                         </div>
                         <div className='text'>
                             <p className='userName'>{ data.split('----')[0] }</p>
-                            <p className='lastMessage'>{ lastMessage[chats.indexOf(data)] }</p>
+                        <p className='lastMessage'>{ lastMessage[chats.indexOf(data)]? lastMessage[chats.indexOf(data)] : <p className='gray'>*Изображение</p> }</p>
                         </div>
                     </div>
                 ) 

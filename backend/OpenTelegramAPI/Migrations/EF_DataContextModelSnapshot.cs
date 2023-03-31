@@ -50,16 +50,16 @@ namespace SocialSpaceTelegramAPI.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("text");
 
-                    b.Property<string>("TextPhotos")
-                        .HasColumnType("text");
+                    b.Property<byte[]>("TextPhoto")
+                        .HasColumnType("bytea");
 
                     b.Property<string>("Type")
                         .HasColumnType("text");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+                    b.Property<byte[]>("UserAvatar")
+                        .HasColumnType("bytea");
 
-                    b.Property<string>("UserPhoto")
+                    b.Property<string>("UserId")
                         .HasColumnType("text");
 
                     b.Property<string>("Username")

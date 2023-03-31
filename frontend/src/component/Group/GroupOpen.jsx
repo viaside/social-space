@@ -17,7 +17,7 @@ export default function GroupOpen(props) {
     if(props.data != null){
         props.data.forEach(element => {
             if(element.messageId === idMessage && (element.type === "group" || element.type === "supergroup")){
-                let data = [element.text, convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.comments, element.userPhoto, element.textPhotos];
+                let data = [element.text, convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.comments, element.userAvatar, element.textPhoto];
                 message.push(data);
             }
         });
@@ -53,7 +53,17 @@ export default function GroupOpen(props) {
 
     const sendComment = async () => {
         if(Comment){
-            fetch("https://localhost:7013/api/telegram/AddComment/" + message[0][3] + "&" + Comment);
+            await fetch("https://localhost:7013/api/telegram/AddComment/", { 
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    MessageId: message[0][3], 
+                    Text: Comment, 
+                })
+            });
     
             let element = document.getElementById("comment");
             element.value = "";
@@ -92,12 +102,12 @@ export default function GroupOpen(props) {
             <div className="GroupMessage">   
                 { showfullScreenImage === true ? fullScreenImage : null }
                 <div className="GroupMessageInfo">
-                    <img src={ message[0][7] } alt="avatar" className="avatar" width={100} height={100}/>
+                    <img src={ "data:image/jpeg;base64," + message[0][7] } alt="avatar" className="avatar" width={100} height={100}/>
                     <div className="text">
                         <p className="userName">{ message[0][4] }</p>
                         <div className="GroupMessageText">
                             <p>{ message[0][0] }</p>
-                            <img src={ message[0][8] } alt="" width={80} onClick={() => setShowFullScreenImage(!showfullScreenImage)} />
+                            <img src={ "data:image/jpeg;base64," + message[0][8] } alt="" width={80} onClick={() => setShowFullScreenImage(!showfullScreenImage)} />
                             <p className="time">{ message[0][1] }</p>
                         </div>
                     </div>

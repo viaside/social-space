@@ -4,6 +4,7 @@ import ChatOpen from "./ChatOpen"
 import ChatList from "./ChatList";
 import AllMessage from './AllMessage';
 import loader from "../../illustration/loader.svg";
+import getCookie from "../../features/getCookie";
 
 
 export default class Chat extends Component {
@@ -16,24 +17,32 @@ export default class Chat extends Component {
     
     componentDidMount() {
         getMessage().then(result => this.setState({data: result}));
-        const timer = setInterval(() => {getMessage().then(result => this.setState({data: result}))}, 1000);
+        const timer = setInterval(() => {getMessage().then(result => this.setState({data: result}))}, 10000);
         return () => clearTimeout(timer); 
     }
     render() {
-        if(this.state.data.length !== 0){
-            return(
-                <div className="Chat">
-                    <ChatList data = { this.state.data }/>
-                    <ChatOpen data = { this.state.data }/>
-                    <AllMessage data = { this.state.data }/>
-                </div>
-            );
+        if(getCookie("isLogin") === "false"){
+            return <h1>Войдите</h1>
         } else{
-            return (
-                <div className="loading">
-                    <img src={loader} alt="" width={300}/>
-                </div>
-            )
+            if(this.state.data){
+                if(this.state.data.length !== 0){
+                    return(
+                        <div className="Chat">
+                            <ChatList data = { this.state.data }/>
+                            <ChatOpen data = { this.state.data }/>
+                            <AllMessage data = { this.state.data }/>
+                        </div>
+                    );
+                } else{
+                    return (
+                        <div className="loading">
+                            <img src={loader} alt="" width={300}/>
+                        </div>
+                    )
+                }
+            } else{
+                return <h1>Добавьте бота</h1>
+            }
         }
     }
 }

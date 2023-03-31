@@ -11,11 +11,11 @@ namespace web_app.Model
         public string? Type { get; set; }
         public string? Username { get; set; }
         public string? UserId { get; set; }
-        public string? UserPhoto { get; set; }
+        public byte[]? UserAvatar { get; set; }
         public string? nameFrom { get; set; }
         public string? Date { get; set; }
         public string? Text { get; set; }
-        public string? TextPhotos { get; set; }
+        public byte[]? TextPhoto { get; set; }
         public string[]? Answers { get; set; } 
         public string[]? Comments { get; set; } 
     }

@@ -23,10 +23,10 @@ export default function GroupOpenMessage(props) {
             }).forEach(element => {
             if((element.type === "group" && element.nameFrom === idChat) || (element.type === "supergroup" && element.nameFrom === idChat)){
                 if(element.text !== null){
-                    let data = [element.text, convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.comments, element.userPhoto, element.textPhotos];
+                    let data = [element.text, convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.comments, element.userAvatar, element.textPhoto];
                     Message.push(data);
                 } else{
-                    let data = ["*Изображение", convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.comments, element.userPhoto, element.textPhotos];
+                    let data = ["*Изображение", convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.comments, element.userAvatar, element.textPhoto];
                     Message.push(data);
                 }
             }
@@ -59,7 +59,7 @@ export default function GroupOpenMessage(props) {
                         activeMessage("message"+index)
                     }}>
                         <div className='avatar'>
-                            <img src={ data[7] } alt="avatar" width={70}/>
+                            <img src={ "data:image/jpeg;base64," + data[7] } alt="avatar" width={70}/>
                         </div>
                         <div className='text'>
                             <p className='userName'>{ data[4] }</p>

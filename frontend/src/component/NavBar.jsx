@@ -1,20 +1,34 @@
 import React from "react";
-import lightLogo from "../illustration/lightLogo.svg";
+import LightLogo from "../illustration/LightLogo.jsx";
 import getCookie from "../features/getCookie";
 
 export default function NavBar() {
-    return(
-        <div className="NavBar">
-            <div>
-                <img src={lightLogo} alt="" width="70vh" />
-                <a href="/Chat">Чаты</a>
-                <a href="/Group">Группы</a>
-                {/* <a href="/Channel">Каналы</a> */}
-                <a href="/Stats">Статистика</a>
+    if(getCookie("isLogin") === "true"){
+        return(
+            <div className="NavBar">
+                <div>
+                    <LightLogo height={40}/>
+                    <a href="/Chat">Чаты</a>
+                    <a href="/Group">Группы</a>
+                    <a href="/Stats">Статистика</a>
+                    <a href="/">FAQ</a>
+                </div>
+                <div>
+                    <a className="avatarNavBar" href="/Profile">{ getCookie("username")[0].toUpperCase()  }</a>
+                </div>
             </div>
-            <div>
-                <a className="avatarNavBar" href="/Profile">{ getCookie("username")[0].toUpperCase()  }</a>
+        );
+    } else{
+        return(
+            <div className="NavBar">
+                <div>
+                    <LightLogo height={40}/>
+                    <a href="/">Главная</a>
+                </div>
+                <div>
+                    <a href="/Profile">Войти</a>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 }

@@ -192,11 +192,11 @@ namespace web_app.Model
                 Type = row.Type,
                 Username = row.Username,
                 UserId = row.UserId,
-                UserPhoto = row.UserPhoto,
+                UserAvatar = row.UserAvatar,
                 nameFrom = row.nameFrom,
                 Date = row.Date,
                 Text = row.Text,
-                TextPhotos = row.TextPhotos,
+                TextPhoto = row.TextPhoto,
                 Answers = row.Answers,
                 Comments = row.Comments
             }));
@@ -221,11 +221,11 @@ namespace web_app.Model
                     dbTable.Type = messageInfoModel.Type;
                     dbTable.Username = messageInfoModel.Username;
                     dbTable.UserId = messageInfoModel.UserId;
-                    dbTable.UserPhoto = messageInfoModel.UserPhoto;
+                    dbTable.UserAvatar = messageInfoModel.UserAvatar;
                     dbTable.nameFrom = messageInfoModel.nameFrom;
                     dbTable.Date = messageInfoModel.Date;
                     dbTable.Text = messageInfoModel.Text;
-                    dbTable.TextPhotos = messageInfoModel.TextPhotos;
+                    dbTable.TextPhoto = messageInfoModel.TextPhoto;
                     dbTable.Answers = result2?.Answers;
                     dbTable.Comments = result2?.Answers;
                 }
@@ -239,11 +239,11 @@ namespace web_app.Model
                 dbTable.Type = messageInfoModel.Type;
                 dbTable.Username = messageInfoModel.Username;
                 dbTable.UserId = messageInfoModel.UserId;
-                dbTable.UserPhoto = messageInfoModel.UserPhoto;
+                dbTable.UserAvatar = messageInfoModel.UserAvatar;
                 dbTable.nameFrom = messageInfoModel.nameFrom;
                 dbTable.Date = messageInfoModel.Date;
                 dbTable.Text = messageInfoModel.Text;
-                dbTable.TextPhotos = messageInfoModel.TextPhotos;
+                dbTable.TextPhoto = messageInfoModel.TextPhoto;
                 dbTable.Answers = result2?.Answers;
                 dbTable.Comments = result2?.Comments;
                 _context.MessageInfo.Add(dbTable);

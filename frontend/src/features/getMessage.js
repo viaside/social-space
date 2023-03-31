@@ -5,18 +5,23 @@ export default async function getMessage() {
     .then((Response) => Response.json())
     .then(async (Result) => { return Result.responseData["usingBots"] });
 
-    let Result = [];
+    if(botId.length !== 0){
+        let Result = [];
+        
+        for (let i = 0; i < botId.length; i++) {
+            let id = botId[i].toString().split('----')[0];   
+            const response = await fetch("https://localhost:7013/api/telegram/getMessage/" + id);
+            const message = await response.json();
     
-    for (let i = 0; i < botId.length; i++) {
-        let id = botId[i].toString().split('----')[0];   
-        const response = await fetch("https://localhost:7013/api/telegram/getMessage/" + id);
-        const message = await response.json();
-
-        if(Result[0] !== undefined){
-            Result = [...Result, ...message.responseData.reverse()];
-        } else{
-            Result = message.responseData.reverse();
+            if(Result[0] !== undefined){
+                Result = [...Result, ...message.responseData.reverse()];
+            } else{
+                Result = message.responseData.reverse();
+            }
         }
+        return Result;
+    } else {
+        return false;
     }
-    return Result;
+
 }

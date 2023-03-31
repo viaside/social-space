@@ -36,7 +36,11 @@ export default class AccountBots extends Component {
                 if(result.responseData === "False"){
                     alert("Бот по данному id не найден")
                 } else{
-                    window.location.reload();
+                    fetch('https://localhost:7013/api/user/GetInfo/' + getCookie("userId"))
+                    .then((Response) => Response.json())
+                    .then(async (Result) => {
+                        this.setState({ data: Result.responseData });
+                    });
                 }
             })
         }
@@ -44,7 +48,13 @@ export default class AccountBots extends Component {
 
     deleteBot(id){
         fetch("https://localhost:7013/api/user/DeleteBot/"+ this.state.data.id +"&"+ id)
-        .then(window.location.reload());
+        .then(
+            fetch('https://localhost:7013/api/user/GetInfo/' + getCookie("userId"))
+            .then((Response) => Response.json())
+            .then(async (Result) => {
+                this.setState({ data: Result.responseData });
+            })
+        );
     }
 
     render() {

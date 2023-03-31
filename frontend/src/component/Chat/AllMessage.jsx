@@ -11,10 +11,10 @@ export default function AllMessage(props) {
     if(props.data != null){
         props.data.forEach(async element => {
             if(element.username === idChat && element.type !== "private"){
-                let data = [element.text, convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.nameFrom, element.userPhoto, element.textPhotos];
+                let data = [element.text, convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.nameFrom, element.userAvatar, element.textPhoto];
                 message.push(data);
             } else{
-                let data = [undefined, convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.nameFrom, element.userPhoto, element.textPhotos];
+                let data = [undefined, convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.nameFrom, element.userAvatar, element.textPhoto];
                 message.push(data);
             }
             });
@@ -35,7 +35,6 @@ export default function AllMessage(props) {
 
     const nullAvatar = (username) => {
         let img = document.getElementById("allchat");
-        console.log(img);
         img.outerHTML = "<p className='chatAvatarNull'>" + username[0].toUpperCase() + "</p>";
     }
 
@@ -43,20 +42,22 @@ export default function AllMessage(props) {
         return null
     } else{
         return(
-            <div className = "AllMessageChat">  
-                <div className="avatar">
-                    <img id="allchat" src={userPhoto} alt="av" width={120} onError={()=>{nullAvatar(idChat)}}/>
+            <div className = "AllMessageChat"> 
+                <div className="AlLMessageUser">
+                    <div className="avatar">
+                        <img id="allchat" src={ "data:image/jpeg;base64," + userPhoto } alt="av" width={120} onError={()=>{nullAvatar(idChat)}}/>
+                    </div> 
+                    <p className="userName">{ idChat }</p>
+                    <p>Все сообщения в группах:</p>
                 </div> 
-                <h1>{ idChat }</h1>
-                <p>Все сообщения в группах:</p>
                 <div className = "ChatInfo" id="ChatInfo2" >
                     {message.reverse().map((data, index) => {
                         if(data[0]){
                             return (
                                 <div className = "ChatInfoElement" key={index}> 
                                     <div className = "ChatInfoElementMessage">
-                                        <p className = "text">В - { data[6] }</p>
-                                        <img src={ data[8] } alt=""/>
+                                        <p className = "group">В { data[6] }</p>
+                                        <img src={ "data:image/jpeg;base64," + data[8] } alt=""/>
                                         <p className = "text">{ data[0] }</p>
                                         <p className = "time">{ data[1] }</p>
                                     </div>

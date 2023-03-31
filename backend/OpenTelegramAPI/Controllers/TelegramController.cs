@@ -2,6 +2,7 @@
 using web_app.Model;
 using web_app.EfCore;
 using Newtonsoft.Json.Linq;
+using System.Net;
 
 namespace OpenTelegramAPI.Contollers
 {
@@ -34,12 +35,14 @@ namespace OpenTelegramAPI.Contollers
         {
             try
             {
+                // Get message from telegram
                 string data;
                 string path = "https://api.telegram.org/bot" + botId + "/getUpdates";
                 using HttpResponseMessage response = await client.GetAsync(path);
                 data = await response.Content.ReadAsStringAsync();
                 JObject result = JObject.Parse(data);
 
+                // Add message in datebase
                 for(int i = 0; i < result["result"]?.LongCount(); i++)
                 {
                     MessageInfoModel messageInfoModel = new MessageInfoModel();
@@ -50,7 +53,11 @@ namespace OpenTelegramAPI.Contollers
                     string pathGetMessagePhoto;
                     string pathGetAvatar;
 
-                    //Get user photo id
+                    byte[] userAvatar = null;
+                    byte[] textPhoto = null;
+
+
+                    // Get user photo id
                     string pathGetPhotoId = "https://api.telegram.org/bot" + botId + "/getUserProfilePhotos?user_id=" 
                                             + result["result"]?[i]?["message"]?["from"]?["id"]?.ToString();
 
@@ -70,15 +77,18 @@ namespace OpenTelegramAPI.Contollers
                         FilePath = resultFile["result"]?["file_path"]?.ToString();
 
                         pathGetAvatar = "https://api.telegram.org/file/bot" + botId + "/" + FilePath;
+
+                        using (WebClient client = new WebClient())
+                        {
+                            userAvatar = client.DownloadData(pathGetAvatar);
+                        }
                     }
                     else{
                         pathGetAvatar = null;
                     }
-
-
-
     
-                    //get filephoto chat
+
+                    // Get filephoto chat
                     if (result["result"]?[i]?["message"]?["photo"]?.ToString() != null)
                     {
                         string pathGetFileMessage = "https://api.telegram.org/bot" + botId + "/getFile?file_id=" + result["result"]?[i]?["message"]?["photo"]?[1]?["file_id"]?.ToString();
@@ -89,14 +99,18 @@ namespace OpenTelegramAPI.Contollers
                         FilePathMessage = resultFileMessage["result"]?["file_path"]?.ToString();
                         //Get photo message
                         pathGetMessagePhoto = "https://api.telegram.org/file/bot" + botId + "/" + FilePathMessage;
+                                                
+                        using (WebClient client = new WebClient())
+                        {
+                            textPhoto = client.DownloadData(pathGetMessagePhoto);
+                        }
                     }
                     else
                     {
                         pathGetMessagePhoto = null;
                     }
 
-
-
+                    // Set info model
                     if (result["result"]?[i]?["message"] != null)
                     {
                         messageInfoModel.BotId = botId;
@@ -105,11 +119,11 @@ namespace OpenTelegramAPI.Contollers
                         messageInfoModel.Type = result["result"]?[i]?["message"]?["chat"]?["type"]?.ToString();
                         messageInfoModel.Username = result["result"]?[i]?["message"]?["from"]?["username"]?.ToString();
                         messageInfoModel.UserId= result["result"]?[i]?["message"]?["from"]?["id"]?.ToString();
-                        messageInfoModel.UserPhoto = pathGetAvatar;
+                        messageInfoModel.UserAvatar = userAvatar;
                         messageInfoModel.nameFrom = result["result"]?[i]?["message"]?["chat"]?["title"]?.ToString();
                         messageInfoModel.Date = result["result"]?[i]?["message"]?["date"]?.ToString();
                         messageInfoModel.Text = result["result"]?[i]?["message"]?["text"]?.ToString();
-                        messageInfoModel.TextPhotos = pathGetMessagePhoto;
+                        messageInfoModel.TextPhoto = textPhoto;
                     }
                     else
                     {
@@ -125,15 +139,15 @@ namespace OpenTelegramAPI.Contollers
                             messageInfoModel.Type = result["result"]?[i]?["channel_post"]?["sender_chat"]?["type"]?.ToString();
                             messageInfoModel.Username = result["result"]?[i]?["channel_post"]?["sender_chat"]?["title"]?.ToString();
                             messageInfoModel.UserId = result["result"]?[i]?["message"]?["from"]?.ToString();
-                            messageInfoModel.UserPhoto = result["result"]?[i]?["message"]?["text"]?.ToString();
                             messageInfoModel.nameFrom = result["result"]?[i]?["channel_post"]?["sender_chat"]?["title"]?.ToString();
                             messageInfoModel.Date = result["result"]?[i]?["channel_post"]?["date"]?.ToString();
                             messageInfoModel.Text = result["result"]?[i]?["channel_post"]?["text"]?.ToString();
-                            messageInfoModel.TextPhotos = pathGetMessagePhoto;
                         }
                     }
                     _db.AddMessage(messageInfoModel);
                 }
+
+                //get massage from database
                 ResponseType type = ResponseType.Success;
                 IEnumerable<MessageInfoModel> dataBases = _db.GetMessage(botId);
 
@@ -141,6 +155,7 @@ namespace OpenTelegramAPI.Contollers
                 {
                     type = ResponseType.NotFound;
                 }
+
                 return Ok(ResponseHandler.GetAppResponse(type, dataBases));
             }
             catch(Exception ex)
@@ -187,17 +202,17 @@ namespace OpenTelegramAPI.Contollers
             }
         }
         
-        [Route("AddComment/{messageId}&{text}")]
-        [HttpPost("{messageId}&{text}")]
-        public IActionResult AddComment(string messageId, string text)
+        [Route("AddComment")]
+        [HttpPost]
+        public IActionResult AddComment(Comment comment)
         {
             ResponseType type = ResponseType.Success;
             try
             {
                 MessageInfoModel messageInfoModel = new MessageInfoModel();
-                messageInfoModel.MessageId = messageId;
-                _db.AddComment(messageInfoModel, text);
-                return Ok(ResponseHandler.GetAppResponse(type, text));
+                messageInfoModel.MessageId = comment.MessageId;
+                _db.AddComment(messageInfoModel, comment.Text);
+                return Ok(ResponseHandler.GetAppResponse(type, comment.Text));
             }
             catch (Exception ex)
             {
@@ -205,8 +220,8 @@ namespace OpenTelegramAPI.Contollers
             }
         }
 
-        [Route("GetUserPhoto/{UserId}")]
-        [HttpPost("{UserId}")]
+        [Route("GetUserPhoto/{botId}&{UserId}")]
+        [HttpPost("{botId}&{UserId}")]
         public async Task<IActionResult> GetUserPhotoAsync(string botId,string UserId)
         {
             ResponseType type = ResponseType.Success;

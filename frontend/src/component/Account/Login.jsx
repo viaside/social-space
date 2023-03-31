@@ -49,6 +49,7 @@ export default class Login extends Component {
                 date = date.toUTCString();
                 document.cookie = "userId=" + result.responseData + "; expires=" + date;
                 document.cookie = "isLogin=true; expires=" + date;
+                document.cookie = "username=" + this.state.Login + "; expires=" + date;
                 window.location.reload();
             }
         })

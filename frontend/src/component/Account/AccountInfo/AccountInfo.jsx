@@ -71,9 +71,7 @@ export default class AccountInfo extends Component {
             })
         }).then((Response) => Response.json())
             .then((Result) => {
-                console.log(Result);
                 let res = JSON.stringify(Result);
-                console.log(res)
                 if (res === '{"success":false}') {
                     alert("error");
                 }
@@ -86,7 +84,6 @@ export default class AccountInfo extends Component {
     render() {
         return(
             <div>
-                <p className="accountAvatar" >{ getCookie("username")[0].toUpperCase() }</p>
                 <div className="AccountUserInfo">
                     <label htmlFor="username">Имя: </label>
                     <input onChange={this.Login} type="text" name="username" id="username"/>

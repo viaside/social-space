@@ -5,7 +5,7 @@
 
 body{
   background-color: #1E1E1E;
-  font-family: Verdana;
+  font-family: Atlas Grotesk Web,Atlas Grotesk,AtlasGrotesk,-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
   margin: 0;
   padding: 0;
   color: white;
@@ -86,9 +86,20 @@ body{
   padding: 10px;
 }
 
+.ChatList:hover{
+  background-color: #353535;
+}
+
 .avatar{
   border-radius: 100px;
   margin: 5px;
+}
+
+.UserInfoPanel{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .avatar p {
@@ -101,6 +112,10 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.avatar img{
+  border-radius: 100px;
 }
 
 .ChatList img{
@@ -140,7 +155,17 @@ body{
   align-items: center;
   background-color: #353535;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.9),0 0px 2px rgba(0, 0, 0, 0.9);
+}
 
+.AlLMessageUser{
+  width: 100%;
+  height: 20vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+  padding-bottom: 10px;
 }
 
 .ChatInfo {
@@ -194,6 +219,10 @@ body{
 .time{
   text-align: right;
   color: #716F6F;
+}
+
+.group{
+  text-align: center;
 }
 
 .answer {
@@ -313,12 +342,12 @@ body{
   width: 15vw;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.9),0 0px 2px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 1px 7px rgba(0, 0, 0, 0.4);
 }
 
 .accountPanel div{
   padding: 20px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.9),0 0px 2px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
 }
 
 .accountElement{
@@ -376,18 +405,109 @@ body{
   align-items: center;
 }
 
-.ib
+.gray{
+  color: #969696;
+}
+
+.head{
+  background-image: url("../src/illustration/Bg2.jpg");
+  height: 100vh;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.head h1{
+  font-size: 150px;
+  text-shadow: 2px 3px 7px white, 
+      0 10px 1px #00328f;
+}
+
+.head p{
+  font-size: 40px;
+  text-shadow: 5px 4px 11px rgb(0,0,0), 0 2px 5px rgb(0,0,0);
+}
+
+.block{
+  padding: 30px;
+}
+
+.block p{
+  text-align: justify;
+  font-size: 16px;
+}
+
+.block h1{
+  font-size: 45px;
+  font-weight: normal;
+}
+
+.imageText{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.leftImage{
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.blockText{
+  padding: 20px;
+  width: 50vw;
+  text-align: justify;
+}
+
+.blockImage{
+  height: 80vh;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0059ff18;
+}
+
+.blue{
+  background-color: #001e55;
+}
+
+.blue h2, .blue h1, .blue p{
+  color: white;
+}
+
+
+.white{
+  background-color: white;
+}
+
+.white h2, .white h1, .white p{
+  color: #00328f;
+}
+
+.start{
+  text-align: start;
+}
 
 /* styles element*/
 p{
   font-size: 14px;
   color: #EFEFF1;
 }
+
 h1 {
   font-size: 18px;
   color: #f1f1f5;
   padding: 15px;
   text-align: center;
+}
+
+h2{
+  font-size: 16px;
+  padding: 15px;
 }
 
 input {
@@ -459,4 +579,9 @@ form{
 label{
   font-size: 14px;
   color: #969696;
+}
+
+ul{
+  padding-left: 50px;
+  font-size: 16px;
 }

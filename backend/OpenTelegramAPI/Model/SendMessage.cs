@@ -8,10 +8,4 @@
         public string Text { get; set; } = string.Empty;
     }
 
-    public class SendMessageResponse
-    {
-        public bool Success { get; set; }
-        public int Id { get; set; }
-        public string Login { get; set; } = string.Empty;
-    }
 }
