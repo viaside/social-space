@@ -1,39 +1,49 @@
-import convertDate from "../../features/convertDate";
 import getCookie from "../../features/getCookie";
 import { useSelector, useDispatch } from 'react-redux';
 import { close } from '../../features/redux/openMessageSlice';
 import { useState } from "react";
+import packagejson from '../../../package.json';
 
 export default function GroupOpen(props) {
+    // redux states
     const openMessage = useSelector((state) => state.openMessage.value)
     const idMessage = useSelector((state) => state.idMessage.value)
     const dispatch = useDispatch()
+
+    // states 
     const [Answer, setAnswer] = useState();
     const [Comment, setComment] = useState();
     const [showfullScreenImage, setShowFullScreenImage] = useState(false);
     
+    // message array 
     let message = [];
     
+    // set message array
     if(props.data != null){
         props.data.forEach(element => {
-            if(element.messageId === idMessage && (element.type === "group" || element.type === "supergroup")){
-                let data = [element.text, convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.comments, element.userAvatar, element.textPhoto];
+            if(element.messageId === idMessage && (element.type === "Group" || element.type === "Supergroup")){
+                let data = [element.text, element.date, element.chatId, element.messageId, element.username, element.answers, element.comments, element.userAvatar, element.textPhoto];
                 message.push(data);
             }
         });
     }
     
+
+    // send message to user
     const sendMessage = async () => {
         if(Answer){
-            let botId = await fetch('https://localhost:7013/api/user/GetInfo/' + getCookie("userId"))
+            // get user bot id 
+            let botId = await fetch(packagejson.ipurl + '/api/user/GetInfo/' + getCookie("userId"))
             .then((Response) => Response.json())
             .then(async (Result) => { return Result.responseData["usingBots"].toString().split('----')[0] });
     
+            // clear message input
             let element = document.getElementById("message");
             element.value = "";
             setAnswer(null);
 
-            await fetch("https://localhost:7013/api/telegram/sendMessage/", { 
+            // send message
+            await fetch(packagejson.ipurl + "/api/telegram/sendMessage/", { 
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -51,9 +61,11 @@ export default function GroupOpen(props) {
         }
     }
 
+    // send local comment
     const sendComment = async () => {
         if(Comment){
-            await fetch("https://localhost:7013/api/telegram/AddComment/", { 
+            // send local comment
+            await fetch(packagejson.ipurl + "/api/telegram/AddComment/", { 
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -65,6 +77,7 @@ export default function GroupOpen(props) {
                 })
             });
     
+            // clear comment input
             let element = document.getElementById("comment");
             element.value = "";
             setComment(null)
@@ -73,20 +86,24 @@ export default function GroupOpen(props) {
         }
     }
     
+    // asnwer input handler 
     const textHandlerAnswer = (event) => {
         setAnswer(event.target.value);
     }
     
+    // comment input handler 
     const textHandlerComent = (event) => {
         setComment(event.target.value);
     }
-
+    
+    // answer enter press handler  
     const handleKeyPressAnswer = (e) => {
         if(e.key === "Enter"){
             sendMessage();
         }
     } 
-
+    
+    // comment enter press handler  
     const handleKeyPressComment = (e) => {
         if(e.key === "Enter"){
             sendComment();
@@ -97,7 +114,11 @@ export default function GroupOpen(props) {
     if(openMessage === false){
         return null
     } else{
-        const fullScreenImage = <div className="fullScreenImage"> <img src={message[0][8]} alt="" onClick={() => setShowFullScreenImage(!showfullScreenImage)} /> </div>;
+        const fullScreenImage = 
+        <div className="fullScreenImage"> 
+            <img src={ "data:image/jpeg;base64," + message[0][8]} alt=""/> 
+            <button onClick={() => setShowFullScreenImage(!showfullScreenImage)}>&#10006;</button>
+        </div>;
         return(
             <div className="GroupMessage">   
                 { showfullScreenImage === true ? fullScreenImage : null }

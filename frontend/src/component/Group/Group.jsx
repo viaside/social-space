@@ -16,9 +16,13 @@ export default class Group extends Component {
     }
     
     componentDidMount() {
+        // get message data
         getMessage().then(result => this.setState({data: result}));
-        const timer = setInterval(() => {getMessage().then(result => this.setState({data: result}))}, 10000);
-        return () => clearTimeout(timer); 
+
+        // always get message data
+        // getMessage().then(result => this.setState({data: result}));
+        // const timer = setInterval(() => {getMessage().then(result => this.setState({data: result}))}, 10000);
+        // return () => clearTimeout(timer); 
     }
 
     render() {
@@ -29,15 +33,9 @@ export default class Group extends Component {
                 if(this.state.data.length !== 0){
                     return(
                         <div className="Chat">
-                            <div>
-                                <GroupList data = { this.state.data }/>
-                            </div>
-                            <div>
-                                <GroupOpenMessage data = { this.state.data }/>
-                            </div>
-                            <div>
-                                <GroupOpen data = { this.state.data }/>
-                            </div>
+                            <GroupList data = { this.state.data }/>
+                            <GroupOpenMessage data = { this.state.data }/>
+                            <GroupOpen data = { this.state.data }/>
                         </div>
                     );
                 } else{

@@ -16,8 +16,11 @@ export default class Chat extends Component {
     }
     
     componentDidMount() {
+        // get message data
+        // getMessage().then(async (result) => await this.setState({data: result}));
+        // always get message data
         getMessage().then(result => this.setState({data: result}));
-        const timer = setInterval(() => {getMessage().then(result => this.setState({data: result}))}, 10000);
+        const timer = setInterval(() => {getMessage().then(result => this.setState({data: result}))}, 100);
         return () => clearTimeout(timer); 
     }
     render() {

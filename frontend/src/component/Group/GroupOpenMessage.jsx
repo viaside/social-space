@@ -2,17 +2,21 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { open } from '../../features/redux/openMessageSlice';
 import { setMessageChat } from '../../features/redux/idMessageSlice';
-import convertDate from '../../features/convertDate';
+import packagejson from '../../../package.json';
 
 export default function GroupOpenMessage(props) {
+    // redux state
     const openChat = useSelector((state) => state.openChat.value)
     const idChat = useSelector((state) => state.idChat.value)
     const dispatch = useDispatch()
   
+    // message array
     let Message = [];
 
+    // set message array
     if(props.data != null){
         props.data.sort(function(a,b){
+            // sort by date
             if(a.date < b.date){
                 return 1;
             }
@@ -21,25 +25,35 @@ export default function GroupOpenMessage(props) {
             }
             return 0;
             }).forEach(element => {
-            if((element.type === "group" && element.nameFrom === idChat) || (element.type === "supergroup" && element.nameFrom === idChat)){
-                if(element.text !== null){
-                    let data = [element.text, convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.comments, element.userAvatar, element.textPhoto];
-                    Message.push(data);
-                } else{
-                    let data = ["*Изображение", convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.comments, element.userAvatar, element.textPhoto];
-                    Message.push(data);
+                if((element.type === "Group" && element.nameFrom === idChat) || (element.type === "Supergroup" && element.nameFrom === idChat)){
+                    // image presence check
+                    if(element.text !== null){
+                        let data = [element.text, element.date, element.chatId, element.messageId, element.username, element.answers, element.comments, element.userAvatar, element.textPhoto, element.isCheck];
+                        Message.push(data);
+                    } else{
+                        let data = ["*Изображение", element.date, element.chatId, element.messageId, element.username, element.answers, element.comments, element.userAvatar, element.textPhoto, element.isCheck];
+                        Message.push(data);
+                    }
                 }
-            }
         });
     }
 
-    const activeMessage = async (id) => {
+    // message selection
+    const activeMessage = async (id, messageId) => {
+
+        // marks that messages have been viewed 
+        fetch(packagejson.ipurl + '/api/telegram/CheckMessage/' + messageId);
+
         for(let i = 0; i <= Message.length; i++){
+            // message html element
             let element = document.getElementById("message"+i);
+
             if(element){
                 if(id === "message"+i){
+                    // set active message style
                     element.style.backgroundColor = "#353535";
                 } else{
+                    // clear other message style
                     element.style.backgroundColor = null;
                 }
             }
@@ -56,14 +70,17 @@ export default function GroupOpenMessage(props) {
                     <div className="ChatList" id={"message"+index} key = {index} onClick = {() => {
                         dispatch(open());
                         dispatch(setMessageChat(data[3]));
-                        activeMessage("message"+index)
+                        activeMessage("message"+index, data[3])
                     }}>
                         <div className='avatar'>
                             <img src={ "data:image/jpeg;base64," + data[7] } alt="avatar" width={70}/>
                         </div>
                         <div className='text'>
                             <p className='userName'>{ data[4] }</p>
-                            <p className='lastMessage'>{ data[0] }</p>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <p className='lastMessage'>{ data[0] }</p>
+                                {data[9]?null : <p className='messageMarker'></p>}
+                            </div>
                         </div>
                     </div>
                 ) 

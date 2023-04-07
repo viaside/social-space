@@ -1,9 +1,11 @@
 import { Component } from "react";
 import getCookie from "../../../features/getCookie";
+import packagejson from "../../../../package.json";
 
 export default class AccountBots extends Component {
     constructor(){
         super();
+        // state
         this.state= {
             data: [],
             isAddBots: false,
@@ -16,27 +18,34 @@ export default class AccountBots extends Component {
     }
     
     async componentDidMount() {
-        fetch('https://localhost:7013/api/user/GetInfo/' + getCookie("userId"))
+        // get user info from cookie
+        fetch(packagejson.ipurl + '/api/user/GetInfo/' + getCookie("userId"))
         .then((Response) => Response.json())
         .then(async (Result) => {
+            // set user data
             this.setState({ data: Result.responseData });
         });
     }
+    
+    // botid input handler
     BotId(event) {
         this.setState({ BotId: event.target.value })
     }
-            
+     
+    // add bot function
     addBot(){
-        this.setState({ isAddBots: !this.state.isAddBots })
+        this.setState({ isAddBots: !this.state.isAddBots });
         if(this.state.isAddBots === true){
-            fetch("https://localhost:7013/api/user/AddBot/"+ this.state.data.id +"&"+ this.state.BotId)
+            // add bot 
+            fetch(packagejson.ipurl + "/api/user/AddBot/"+ this.state.data.id +"&"+ this.state.BotId)
             .then((Response) => Response.json())
             .then((result) => {
                 console.log(result);
                 if(result.responseData === "False"){
                     alert("Бот по данному id не найден")
                 } else{
-                    fetch('https://localhost:7013/api/user/GetInfo/' + getCookie("userId"))
+                    // update user info
+                    fetch(packagejson.ipurl + '/api/user/GetInfo/' + getCookie("userId"))
                     .then((Response) => Response.json())
                     .then(async (Result) => {
                         this.setState({ data: Result.responseData });
@@ -46,10 +55,13 @@ export default class AccountBots extends Component {
         }
     }
 
+    // delet user bot 
     deleteBot(id){
-        fetch("https://localhost:7013/api/user/DeleteBot/"+ this.state.data.id +"&"+ id)
+        // delete bot
+        fetch(packagejson.ipurl + "/api/user/DeleteBot/"+ this.state.data.id +"&"+ id)
         .then(
-            fetch('https://localhost:7013/api/user/GetInfo/' + getCookie("userId"))
+            // update user info
+            fetch(packagejson.ipurl + '/api/user/GetInfo/' + getCookie("userId"))
             .then((Response) => Response.json())
             .then(async (Result) => {
                 this.setState({ data: Result.responseData });

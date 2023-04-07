@@ -1,5 +1,6 @@
 import { Component } from "react";
 import getCookie from "../../../features/getCookie";
+import packagejson from "../../../../package.json";
 
 export default class AccountSetting extends Component {
     constructor(){
@@ -11,9 +12,11 @@ export default class AccountSetting extends Component {
     }
     
     async componentDidMount() {
-        fetch('https://localhost:7013/api/user/GetInfo/' + getCookie("userId"))
+        // get user info
+        fetch(packagejson.ipurl + '/api/user/GetInfo/' + getCookie("userId"))
         .then((Response) => Response.json())
         .then(async (Result) => {
+            // set user info
             this.setState({ data: Result.responseData });
         });
     }

@@ -1,9 +1,11 @@
 import { Component } from "react";
 import getCookie from "../../features/getCookie";
+import packagejson from "../../../package.json";
 
 export default class Login extends Component {
     constructor(){
         super();
+        //states
         this.state= {
             isLogin: null,
             Login: "",
@@ -16,19 +18,24 @@ export default class Login extends Component {
     }
     
     async componentDidMount() {
+        // set login state from cookie
         await this.setState({ isLogin: getCookie("isLogin") });
     }
 
+    // login input handler
     Login(event) {
         this.setState({ Login: event.target.value })
     }
 
+    // password input handler
     Password(event) {
         this.setState({ Password: event.target.value })
     }
 
+    // user login
     login(){
-        fetch('https://localhost:7013/api/User/Login', {
+        // check login
+        fetch(packagejson.ipurl + '/api/User/Login', {
             method: 'post',
             headers: {
                 'Accept': 'application/json',
@@ -45,6 +52,7 @@ export default class Login extends Component {
                 alert("Неправельный логин или пароль");
             }
             else {
+                // set user cookie
                 let date = new Date(Date.now() + 86400e3 * 30);
                 date = date.toUTCString();
                 document.cookie = "userId=" + result.responseData + "; expires=" + date;

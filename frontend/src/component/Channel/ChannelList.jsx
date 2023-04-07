@@ -19,7 +19,7 @@ export default function ChannelList(props) {
             }
             return 0;
             }).forEach(element => {
-            if(element.type === "channel" || element.type === "superchannel"){
+            if(element.type === "Channel" || element.type === "Superchannel"){
                 group.push(element.nameFrom);
             }
         });

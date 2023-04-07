@@ -1,0 +1,37 @@
+version: '3.4'
+
+networks:
+  backend-dev:
+   driver: bridge
+
+services:
+  backend:
+    image: backend
+    container_name: backend_container
+    extra_hosts:
+      -  "host.docker.internal:host-gateway"
+    depends_on:
+      - "postgres"
+    build:
+      context: .
+      dockerfile: Backend/Dockerfile
+    networks:
+      - backend-dev
+
+  postgres:
+    image: postgres
+    container_name: postgres_container
+    ports:
+      - "5432"
+    restart: always
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "123"
+      POSTGRES_DB: "OpenSpaceDB"
+    networks:
+      - backend-dev
+
+volumes:
+  db_volume:

@@ -1,9 +1,11 @@
 import { Component } from "react";
 import getCookie from "../../features/getCookie";
+import packagejson from "../../../package.json";
 
 export default class Register extends Component {
     constructor(){
         super();
+        // state
         this.state= {
             isLogin: null,
             Login: "",
@@ -16,19 +18,24 @@ export default class Register extends Component {
     }
     
     async componentDidMount() {
+        // set login state from cookie
         await this.setState({ isLogin: getCookie("isLogin") });
     }
 
+    // login input handler
     Login(event) {
         this.setState({ Login: event.target.value })
     }
 
+    // password input handler
     Password(event) {
         this.setState({ Password: event.target.value })
     }
 
+    // user register
     register(){
-        fetch('https://localhost:7013/api/User/Registr', {
+        // register
+        fetch(packagejson.ipurl + '/api/User/Registr', {
             method: 'post',
             headers: {
                 'Accept': 'application/json',
@@ -46,6 +53,7 @@ export default class Register extends Component {
                 alert('Invalid User');
             }
             else {
+                alert('successfull register')
             }
         })
     }

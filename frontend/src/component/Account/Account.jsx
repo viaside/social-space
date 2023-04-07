@@ -7,6 +7,7 @@ import AccountSetting from "./AccountInfo/AccountSetting"
 export default class Profile extends Component {
     constructor(){
         super();
+        // states
         this.state= {
             isLogin: null,
             Element: <AccountInfo/>,
@@ -18,11 +19,16 @@ export default class Profile extends Component {
     }
     
     async componentDidMount() {
+
+        // get login state from cookie
         await this.setState({ isLogin: getCookie("isLogin") });
         let elInfo = document.getElementById("info")
+
+        //mark deffault active block
         elInfo.style.backgroundColor = "#1E1E1E";
     }
 
+    // marks info block
     openInfo(){
         this.setState({Element: <AccountInfo/>})
         let elInfo = document.getElementById("info")
@@ -32,6 +38,8 @@ export default class Profile extends Component {
         elBots.style.backgroundColor = "#353535";
         elSetting.style.backgroundColor = "#353535";
     }
+
+    // marks bots block
     openBots(){
         this.setState({Element: <AccountBots/>})
         let elInfo = document.getElementById("info")
@@ -42,6 +50,7 @@ export default class Profile extends Component {
         elSetting.style.backgroundColor = "#353535";
     }
     
+    // marks chat block
     openSetting(){
         this.setState({Element: <AccountSetting/>})
         let elInfo = document.getElementById("info")

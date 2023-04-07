@@ -1,41 +1,48 @@
-import convertDate from "../../features/convertDate";
 import { useSelector } from 'react-redux';
 
 export default function AllMessage(props) {
+    // redux state
     const openChat = useSelector((state) => state.openChat.value)
     const idChat = useSelector((state) => state.idChat.value)
 
+    // mesage array and user photo 
     let message = [];
     let userPhoto;
 
+
+    // load data
     if(props.data != null){
         props.data.forEach(async element => {
-            if(element.username === idChat && element.type !== "private"){
-                let data = [element.text, convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.nameFrom, element.userAvatar, element.textPhoto];
+            if(element.username === idChat && element.type !== "Private"){
+                let data = [element.text, element.date, element.chatId, element.messageId, element.username, element.answers, element.nameFrom, element.userAvatar, element.textPhoto];
                 message.push(data);
             } else{
-                let data = [undefined, convertDate(element.date), element.chatId, element.messageId, element.username, element.answers, element.nameFrom, element.userAvatar, element.textPhoto];
+                let data = [undefined, element.date, element.chatId, element.messageId, element.username, element.answers, element.nameFrom, element.userAvatar, element.textPhoto];
                 message.push(data);
             }
             });
     }
 
+    // set correct user avatar
     message.forEach(element => {
         if(element[4] === idChat){
             userPhoto = element[7];
         }
     });
 
-    let chat = document.querySelector("#ChatInfo2");
-    if(chat != null){
-        if(chat.scrollTop === 0){
-            chat.scrollTop = Math.pow(10,10);
-        };
-    }
-
+    
+    // error load user avatar
     const nullAvatar = (username) => {
         let img = document.getElementById("allchat");
         img.outerHTML = "<p className='chatAvatarNull'>" + username[0].toUpperCase() + "</p>";
+    }
+    
+    // scrolling message list to end
+    let chat = document.querySelector("#ChatInfo2");
+    if(chat != null){
+        if(chat.scrollTop === 0){
+            chat.scrollTop = chat.scrollHeight;
+        };
     }
 
     if(openChat === false){

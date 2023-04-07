@@ -1,4 +1,5 @@
 export default function getCookie(name) {
+    // get cookie data
     let matches = document.cookie.match(new RegExp(
         "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
     ));

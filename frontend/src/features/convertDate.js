@@ -1,6 +1,7 @@
 
 
 export default function convertDate(date) {
+    // convert data from unix
     let unix_timestamp = date;
     var dates = new Date(unix_timestamp * 1000);
     var day = dates.getDate();

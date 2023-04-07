@@ -5,12 +5,16 @@ import { close } from '../../features/redux/openMessageSlice';
 import { setIdChat } from '../../features/redux/idChatSlice';
 
 export default function GroupList(props) {
+    // redux
     const dispatch = useDispatch()
   
+    // group array
     let group = [];
 
+    // set group array
     if(props.data){
         props.data.sort(function(a,b){
+            // sort by data
             if(a.date < b.date){
                 return 1;
             }
@@ -19,34 +23,44 @@ export default function GroupList(props) {
             }
             return 0;
             }).forEach(element => {
-            if(element.type === "group" || element.type === "supergroup"){
-                group.push(element.nameFrom);
-            }
+                if(element.type === "Group" || element.type === "Supergroup"){
+                    group.push(element.nameFrom);
+                }
         });
     }
 
+    // group selection
     const activeGroup = async (id) => {
         for(let i = 0; i <= group.length; i++){
+            // group html elelement
             let element = await document.getElementById(i);
+
+            // group message html element
             let elementMessage = await document.getElementById("message"+i);
-            if(element && elementMessage){
+
+            if(element){
                 if(id === i){
-                    element.style.backgroundColor = await "#353535";
+                    // set style active group
+                    element.style.backgroundColor = "#353535";
                 } else{
+                    // clear style  other group
                     element.style.backgroundColor = null;
                 }
             }
-            elementMessage.style.backgroundColor = null;
+            if(elementMessage){
+                // clear style group message 
+                elementMessage.style.backgroundColor = null;
+            }
         }
     }
 
     return(
-        <div className='ChatListAll'>
+        <div className='GroupListAll'>
             {group.filter((element, index) => {
                 return group.indexOf(element) === index;
             }).map((data, index) => {
                 return (
-                    <div className="ChatList" id={index} key={index} onClick = {() => {
+                    <div className="GroupList" id={index} key={index}  onClick = {() => {
                         dispatch(open());
                         dispatch(close());
                         dispatch(setIdChat(data));
