@@ -23,6 +23,7 @@ export default async function getMessage() {
                 Result = message.responseData.reverse();
             }
         }
+
         return Result;
     } else {
         return false;

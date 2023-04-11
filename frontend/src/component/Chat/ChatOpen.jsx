@@ -3,24 +3,26 @@ import { useSelector, useDispatch } from 'react-redux';
 import { close } from '../../features/redux/openChatSlice';
 import { useEffect, useState } from "react";
 import packagejson from "../../../package.json";
+import { set } from "../../features/redux/dataSlice";
+import getMessage from "../../features/getMessage";
 
-export default function ChatOpen(props) {
+export default function ChatOpen() {
     // redux states
     const openChat = useSelector((state) => state.openChat.value)
     const idChat = useSelector((state) => state.idChat.value)
     const dispatch = useDispatch()
-    const [text, setText] = useState();
-
+    const dataRedux = useSelector((state) => state.data.value);    
+    
     // states
+    const [text, setText] = useState();
     const [showfullScreenImage, setShowFullScreenImage] = useState(false);
     const [idfullScreenImage, setidFullScreenImage] = useState(null);
 
     // message array
     let message = [];
-
     // set message array
-    if(props.data != null){
-        props.data.forEach(element => {
+    if(dataRedux != null){
+        dataRedux.forEach(element => {
             if(element.username === idChat && element.type === "Private"){
                 let data = [element.text, element.date, element.chatId, element.messageId, element.username, element.answers, element.textPhoto];
                 message.push(data);
@@ -50,6 +52,8 @@ export default function ChatOpen(props) {
                     Text: text.toString(), 
                 })
             });
+
+            getMessage().then((Result) => {dispatch(set(Result))});
 
             // clear message input
             let element = document.getElementById("message");
@@ -90,6 +94,15 @@ export default function ChatOpen(props) {
         }
     })
 
+    const checkMessage = () => {
+        getMessage().then((Result) => {dispatch(set(Result))});
+
+        // marks that messages have been viewed 
+        for (let i = 0; i < message.length; i++) {
+            const element = message[i];
+            fetch(packagejson.ipurl + '/api/telegram/CheckMessage/' + element[3]);
+        }
+    }
 
     if(openChat === false){
         return null
@@ -104,41 +117,50 @@ export default function ChatOpen(props) {
                 { showfullScreenImage === true ? fullScreenImage : null }
                 <h1>Чат с {idChat}</h1>
                 <div id="ChatInfo" className="ChatInfo">
-                    {message.reverse().map((data, index) => { 
-                        return (
-                            <div key = {index} >
-                                <div className = "ChatInfoElement"> 
-                                    <div className="ChatInfoElementMessage">
-                                        <img src={"data:image/jpeg;base64," + data[6] } onClick={() => {setShowFullScreenImage(!showfullScreenImage); setidFullScreenImage(data[6])}}  alt="" />
-                                        <p className="text">{ data[0] }</p>
-                                        <p className="time">{ data[1] }</p>
-                                    </div>
-                                </div>
-                                { data[5] ? data[5].reverse().sort(function(a,b){
-                                    if(a.split('/')[1] > b.split('/')[1]){
-                                        return 1;
-                                    }
-                                    if(a.split('/')[1] < b.split('/')[1]){
-                                        return -1;
-                                    }
-                                    return 0;
-                                }).map((answer, index) => {
-                                    return(
-                                        <div className = "ChatAnswerElement" key={index}>
-                                            <p className = "text">{ answer.split("/")[0] }</p>
-                                            <p className = "time">{ answer.split("/")[1] }</p> 
+                        {message.reverse().sort(function(a,b){
+                                if(a[1] > b[1]){
+                                    return 1;
+                                }
+                                if(a[1] < b[1]){
+                                    return -1;
+                                }
+                                return 0;
+                            }).map((data, index) => { 
+                            return (
+                                <div key = {index} >
+                                    <div className = "ChatInfoElement"> 
+                                        <div className="ChatInfoElementMessage">
+                                            <img src={"data:image/jpeg;base64," + data[6] } onClick={() => {setShowFullScreenImage(!showfullScreenImage); setidFullScreenImage(data[6])}}  alt="" />
+                                            <p className="text">{ data[0] }</p>
+                                            <p className="time">{ data[1] }</p>
                                         </div>
-                                    )
-                                }) : null}
-                            </div>
-                        )
-                    })}
+                                    </div>
+                                    { data[5] ? data[5].slice().reverse().sort(function(a,b){
+                                        if(a.split('/')[1] > b.split('/')[1]){
+                                            return 1;
+                                        }
+                                        if(a.split('/')[1] < b.split('/')[1]){
+                                            return -1;
+                                        }
+                                        return 0;
+                                    }).map((answer, index) => {
+                                        return(
+                                            <div className = "ChatAnswerElement" key={index}>
+                                                <p className = "text">{ answer.split("/")[0] }</p>
+                                                <p className = "time">{ answer.split("/")[1] }</p> 
+                                            </div>
+                                        )
+                                    }) : null}
+                                </div>
+                            )
+                        })}
                 </div>
                 <div className="answer">
                     <input onChange={(event) => textHandler(event)} onKeyDown={handleKeyPress} name="message" id="message" type={text} placeholder="Напишите сообщение..."></input>
                     <div className="buttons">
                         <button onClick={() => sendMessage()}>Ответить</button>
                     </div>
+                        <button onClick={() => checkMessage()}>Пометить как прочитаное</button>
                     <button onClick={ () => dispatch(close()) }>Закрыть чат</button>
                 </div>
             </div>

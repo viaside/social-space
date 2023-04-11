@@ -1,4 +1,5 @@
-import { Component } from "react";
+import { Component, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import getMessage from "../../features/getMessage";
 import ChatOpen from "./ChatOpen"
 import ChatList from "./ChatList";
@@ -16,13 +17,9 @@ export default class Chat extends Component {
     }
     
     componentDidMount() {
-        // get message data
-        // getMessage().then(async (result) => await this.setState({data: result}));
-        // always get message data
-        getMessage().then(result => this.setState({data: result}));
-        const timer = setInterval(() => {getMessage().then(result => this.setState({data: result}))}, 100);
-        return () => clearTimeout(timer); 
+        getMessage().then(async (result) => await this.setState({data: result}));
     }
+    
     render() {
         if(getCookie("isLogin") === "false"){
             return <h1>Войдите</h1>
@@ -31,9 +28,9 @@ export default class Chat extends Component {
                 if(this.state.data.length !== 0){
                     return(
                         <div className="Chat">
-                            <ChatList data = { this.state.data }/>
-                            <ChatOpen data = { this.state.data }/>
-                            <AllMessage data = { this.state.data }/>
+                            <ChatList/>
+                            <ChatOpen/>
+                            <AllMessage/>
                         </div>
                     );
                 } else{

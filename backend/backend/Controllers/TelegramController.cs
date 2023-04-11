@@ -109,8 +109,8 @@ namespace OpenTelegramAPI.Contollers
             ResponseType type = ResponseType.Success;
             try
             {
-                string FileId;
-                string FilePath;
+                string? FileId;
+                string? FilePath;
 
                 //Get user photo id
                 string pathGetPhotoId = "https://api.telegram.org/bot" + botId + "/getUserProfilePhotos?user_id=" + UserId;

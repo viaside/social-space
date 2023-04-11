@@ -1,21 +1,25 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { open } from '../../features/redux/openMessageSlice';
+import { set } from "../../features/redux/dataSlice";
 import { setMessageChat } from '../../features/redux/idMessageSlice';
+import getMessage from '../../features/getMessage';
 import packagejson from '../../../package.json';
 
 export default function GroupOpenMessage(props) {
     // redux state
     const openChat = useSelector((state) => state.openChat.value)
     const idChat = useSelector((state) => state.idChat.value)
+    const dataRedux = useSelector((state) => state.data.value);
     const dispatch = useDispatch()
   
     // message array
     let Message = [];
 
     // set message array
-    if(props.data != null){
-        props.data.sort(function(a,b){
+    if(dataRedux != null){
+        let newData = [...dataRedux];
+        newData.sort(function(a,b){
             // sort by date
             if(a.date < b.date){
                 return 1;
@@ -40,6 +44,7 @@ export default function GroupOpenMessage(props) {
 
     // message selection
     const activeMessage = async (id, messageId) => {
+        getMessage().then((Result) => {dispatch(set(Result))});
 
         // marks that messages have been viewed 
         fetch(packagejson.ipurl + '/api/telegram/CheckMessage/' + messageId);
@@ -59,6 +64,7 @@ export default function GroupOpenMessage(props) {
             }
         }
     }
+
 
     if(openChat === true){
         return(

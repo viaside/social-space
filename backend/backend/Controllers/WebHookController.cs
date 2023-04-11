@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net.WebSockets;
 using web_app.Model;
 using Telegram.Bot.Types;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using web_app.EfCore;
+using System.Net.WebSockets;
+using System.Text;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
 {
@@ -14,13 +18,65 @@ namespace Backend.Controllers
         static HttpClient client = new HttpClient();
         private readonly DbHelper _db;
 
+        static WebSocket webSocket;
+
         public WebHookController(EF_DataContext eF_DataContext)
         {
             _db = new DbHelper(eF_DataContext);
         }
 
+        [Route("Connect")]
+        [HttpGet]
+        public async Task Connect()
+        {
+            if (HttpContext.WebSockets.IsWebSocketRequest)
+            {
+                webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
+                await Echo();
+            }
+            else
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            }
+        }
+
+        private static async Task Echo()
+        {
+            if(webSocket != null){
+                var buffer = new byte[1024 * 4];
+                var receiveResult = await webSocket.ReceiveAsync(
+                    new ArraySegment<byte>(buffer), CancellationToken.None);
+
+                while (!receiveResult.CloseStatus.HasValue)
+                {
+                    await webSocket.SendAsync(
+                        new ArraySegment<byte>(buffer, 0, receiveResult.Count),
+                        receiveResult.MessageType,
+                        receiveResult.EndOfMessage,
+                        CancellationToken.None);
+
+                    receiveResult = await webSocket.ReceiveAsync(
+                        new ArraySegment<byte>(buffer), CancellationToken.None);
+                }
+
+                await webSocket.CloseAsync(
+                    receiveResult.CloseStatus.Value,
+                    receiveResult.CloseStatusDescription,
+                    CancellationToken.None);
+            }
+        }
+
+        public async Task SendMessageToSockets(string message)
+        {
+            if(webSocket != null){
+                var bytes = Encoding.Default.GetBytes(message);
+                var arraySegment = new ArraySegment<byte>(bytes);
+                await webSocket.SendAsync(arraySegment, WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+        }
+        
         [HttpPost]
-        public async Task Post(Update update) 
+        public async Task<ActionResult> Post(Update update) 
         {
             try
             {
@@ -127,10 +183,12 @@ namespace Backend.Controllers
                     }
                 }
                 _db.AddMessage(messageInfoModel);
+                await SendMessageToSockets("need update");
+                return Ok(ResponseType.Success);
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex);
+                return BadRequest(ex);
             }
         }
 
@@ -139,7 +197,7 @@ namespace Backend.Controllers
         {
             ResponseType type = ResponseType.Success;
 
-            return Ok(ResponseHandler.GetAppResponse(type, "success"));
+            return Ok(ResponseHandler.GetAppResponse(type, "successfull"));
         }
     }
 }

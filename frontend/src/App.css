@@ -83,11 +83,22 @@ body{
 
 .ChatListAll{
   display: flex;
+  overflow: auto;
   flex-direction: column;
   width: 20vw;
   border: var(--border-default);
   border-right: none;
 }
+
+.ChatListAll::-webkit-scrollbar {
+  width: 1em;
+}
+
+.ChatListAll::-webkit-scrollbar-thumb {
+  background-color: #3D3D3D;
+  border-radius: 100px;
+}
+
 
 .ChatList{
   display: inline-flex;
@@ -558,6 +569,18 @@ body{
   width: 5px;
   height: 5px;
   margin: 5px;
+}
+
+.countMarker{
+  background-color: #005BFF;
+  border-radius: 100px;
+  padding: 10px;
+  width: 30px;
+  height: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 /* styles element*/

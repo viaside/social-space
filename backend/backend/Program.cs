@@ -1,14 +1,5 @@
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft;
-using Microsoft.Extensions.Configuration;
-using web_app;
-using Npgsql;
-using Microsoft.EntityFrameworkCore.Design;
 using web_app.EfCore;
-using Microsoft.AspNet.WebHooks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +21,8 @@ app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localho
 
 
 app.UseDefaultFiles();
+
+app.UseWebSockets();
 
 app.UseStaticFiles();
 

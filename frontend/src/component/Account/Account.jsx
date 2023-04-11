@@ -3,6 +3,8 @@ import getCookie from "../../features/getCookie";
 import AccountInfo from "./AccountInfo/AccountInfo"
 import AccountBots from "./AccountInfo/AccountBots"
 import AccountSetting from "./AccountInfo/AccountSetting"
+import packagejson from "../../../package.json";
+import loader from "../../illustration/loader.svg";
 
 export default class Profile extends Component {
     constructor(){
@@ -11,6 +13,7 @@ export default class Profile extends Component {
         this.state= {
             isLogin: null,
             Element: <AccountInfo/>,
+            data: null,
         }
 
         this.openInfo = this.openInfo.bind(this);
@@ -19,6 +22,12 @@ export default class Profile extends Component {
     }
     
     async componentDidMount() {
+        fetch(packagejson.ipurl + '/api/user/GetInfo/' + getCookie("userId"))
+        .then((Response) => Response.json())
+        .then(async (Result) => {
+            // set user info
+            this.setState({ data: Result.responseData });
+        });
 
         // get login state from cookie
         await this.setState({ isLogin: getCookie("isLogin") });
@@ -26,6 +35,7 @@ export default class Profile extends Component {
 
         //mark deffault active block
         elInfo.style.backgroundColor = "#1E1E1E";
+        
     }
 
     // marks info block
@@ -63,28 +73,36 @@ export default class Profile extends Component {
 
     render() {
         if(this.state.isLogin === "true"){
-            return(
-                <div className="account">
-                    <div className="accountPanel">
-                        <div className="UserInfoPanel">
-                            <p className="accountAvatar">{getCookie("username")[0].toUpperCase()}</p>
-                            <h1>{getCookie("username")}</h1>
+            if(this.state.data){
+                return(
+                    <div className="account">
+                        <div className="accountPanel">
+                            <div className="UserInfoPanel">
+                                <p className="accountAvatar">{getCookie("username")[0].toUpperCase()}</p>
+                                <h1>{getCookie("username")}</h1>
+                            </div>
+                            <div onClick={this.openInfo} id="info">
+                                <h1>Основная информация</h1>
+                            </div>
+                            <div onClick={this.openBots} id="bots">
+                                <h1>Добавленные боты</h1>
+                            </div>
+                            <div onClick={this.openSetting} id="setting">
+                                <h1>Настройки</h1>
+                            </div>
                         </div>
-                        <div onClick={this.openInfo} id="info">
-                            <h1>Основная информация</h1>
-                        </div>
-                        <div onClick={this.openBots} id="bots">
-                            <h1>Добавленные боты</h1>
-                        </div>
-                        <div onClick={this.openSetting} id="setting">
-                            <h1>Настройки</h1>
+                        <div className="accountElement">
+                            { this.state.Element }
                         </div>
                     </div>
-                    <div className="accountElement">
-                        { this.state.Element }
+                );
+            } else{
+                return (
+                    <div className="loading">
+                        <img src={loader} alt="" width={300}/>
                     </div>
-                </div>
-            );
+                )
+            }
         }
     }
 }

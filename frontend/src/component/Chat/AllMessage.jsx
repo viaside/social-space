@@ -1,9 +1,10 @@
 import { useSelector } from 'react-redux';
 
-export default function AllMessage(props) {
+export default function AllMessage() {
     // redux state
     const openChat = useSelector((state) => state.openChat.value)
     const idChat = useSelector((state) => state.idChat.value)
+    const dataRedux = useSelector((state) => state.data.value);    
 
     // mesage array and user photo 
     let message = [];
@@ -11,8 +12,9 @@ export default function AllMessage(props) {
 
 
     // load data
-    if(props.data != null){
-        props.data.forEach(async element => {
+    if(dataRedux != null){
+        let newData = [...dataRedux];
+        newData.forEach(async element => {
             if(element.username === idChat && element.type !== "Private"){
                 let data = [element.text, element.date, element.chatId, element.messageId, element.username, element.answers, element.nameFrom, element.userAvatar, element.textPhoto];
                 message.push(data);

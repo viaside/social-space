@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { open } from '../../features/redux/openChatSlice';
 import { close } from '../../features/redux/openMessageSlice';
 import { setIdChat } from '../../features/redux/idChatSlice';
@@ -7,13 +7,15 @@ import { setIdChat } from '../../features/redux/idChatSlice';
 export default function GroupList(props) {
     // redux
     const dispatch = useDispatch()
-  
+    const dataRedux = useSelector((state) => state.data.value);
+
     // group array
     let group = [];
 
     // set group array
-    if(props.data){
-        props.data.sort(function(a,b){
+    if(dataRedux){
+        let newData = [...dataRedux];
+        newData.sort(function(a,b){
             // sort by data
             if(a.date < b.date){
                 return 1;

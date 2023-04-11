@@ -1,13 +1,16 @@
 import getCookie from "../../features/getCookie";
+import getMessage from '../../features/getMessage';
 import { useSelector, useDispatch } from 'react-redux';
+import { set } from "../../features/redux/dataSlice";
 import { close } from '../../features/redux/openMessageSlice';
 import { useState } from "react";
 import packagejson from '../../../package.json';
 
 export default function GroupOpen(props) {
     // redux states
-    const openMessage = useSelector((state) => state.openMessage.value)
-    const idMessage = useSelector((state) => state.idMessage.value)
+    const openMessage = useSelector((state) => state.openMessage.value);
+    const idMessage = useSelector((state) => state.idMessage.value);
+    const dataRedux = useSelector((state) => state.data.value);
     const dispatch = useDispatch()
 
     // states 
@@ -19,8 +22,8 @@ export default function GroupOpen(props) {
     let message = [];
     
     // set message array
-    if(props.data != null){
-        props.data.forEach(element => {
+    if(dataRedux != null){
+        dataRedux.forEach(element => {
             if(element.messageId === idMessage && (element.type === "Group" || element.type === "Supergroup")){
                 let data = [element.text, element.date, element.chatId, element.messageId, element.username, element.answers, element.comments, element.userAvatar, element.textPhoto];
                 message.push(data);
@@ -56,6 +59,7 @@ export default function GroupOpen(props) {
                     Text: Answer.toString(), 
                 })
             });
+            getMessage().then((Result) => {dispatch(set(Result))});
         } else{
             alert("Напишите ответ")
         }
@@ -80,7 +84,8 @@ export default function GroupOpen(props) {
             // clear comment input
             let element = document.getElementById("comment");
             element.value = "";
-            setComment(null)
+            setComment(null);
+            getMessage().then((Result) => {dispatch(set(Result))});
         } else{
             alert("Напишите комментарий")
         }

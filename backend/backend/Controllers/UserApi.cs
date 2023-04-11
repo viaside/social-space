@@ -208,12 +208,19 @@ namespace web_app.Controllers
                     userInfoModel.Id = UserId;
                     _db.AddBot(userInfoModel, BotId + "----" + botName);
 
-                    // add webhook in telegram bot api
-                    string pathserv = "https://f44c-77-51-169-217.eu.ngrok.io/api/webhook/";
-                    string pathWH = "https://api.telegram.org/bot" + BotId + "/setWebhook?url=" + pathserv + "&secret_token=" + BotId.Replace(":", "-");
-                    await client.GetAsync(pathWH);
+                    // delete webhook in telegram bot api
+                    string pathWHDelete = "https://api.telegram.org/bot" + BotId + "/deleteWebhook";
+                    using HttpResponseMessage responseIdwhdelete = await client.GetAsync(pathWHDelete);
 
-                    return Ok(ResponseHandler.GetAppResponse(type, BotId));
+
+                    // add webhook in telegram bot api
+                    string pathserv = "https://26c4-94-29-126-191.ngrok-free.app/api/webhook/";
+                    string pathWH = "https://api.telegram.org/bot" + BotId + "/setWebhook?url=" + pathserv + "&secret_token=" + BotId.Replace(":", "-");
+                    using HttpResponseMessage responseIdwh = await client.GetAsync(pathWH);
+                    string dataIdwh = await responseId.Content.ReadAsStringAsync();
+                    JObject resultIdwh = JObject.Parse(dataIdwh);
+
+                    return Ok(ResponseHandler.GetAppResponse(type, responseIdwh));
                 }
                 else
                 {
