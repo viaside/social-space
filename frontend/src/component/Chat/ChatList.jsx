@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { open } from '../../features/redux/openChatSlice';
+import { set } from "../../features/redux/dataSlice";
+import getMessage from '../../features/getMessage';
 import { setIdChat } from '../../features/redux/idChatSlice';
 import packagejson from "../../../package.json";
 
@@ -74,7 +76,8 @@ export default function ChatList() {
         fetch(packagejson.ipurl + '/api/telegram/CheckMessage/' + id)
         .then((Response) => Response.json())
         .then((Result) => {
-            console.log(Result);
+            getMessage().then((Result) => {dispatch(set(Result))});
+            
         });
 
         chats.forEach(el => {

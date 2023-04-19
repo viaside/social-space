@@ -59,8 +59,9 @@ export default function GroupOpen(props) {
                     MessageId: message[message.length-1][3].toString(),
                     Text: Answer.toString(), 
                 })
+            }).then(()=> {
+                getMessage().then((Result) => {dispatch(set(Result))});
             });
-            getMessage().then((Result) => {dispatch(set(Result))});
         } else{
             alert("Напишите ответ")
         }
@@ -80,13 +81,14 @@ export default function GroupOpen(props) {
                     MessageId: message[0][3], 
                     Text: Comment, 
                 })
-            });
+            }).then(() => {
+                getMessage().then((Result) => {dispatch(set(Result))});
+            })
     
             // clear comment input
             let element = document.getElementById("comment");
             element.value = "";
             setComment(null);
-            getMessage().then((Result) => {dispatch(set(Result))});
         } else{
             alert("Напишите комментарий")
         }
@@ -117,13 +119,15 @@ export default function GroupOpen(props) {
     } 
 
     const processMesasge = (id) => {
-        fetch(packagejson.ipurl + "/api/telegram/ProcessMessage/" + id);
-        getMessage().then((Result) => {dispatch(set(Result))});
+        fetch(packagejson.ipurl + "/api/telegram/ProcessMessage/" + id).then(() => {
+            getMessage().then((Result) => {dispatch(set(Result))});
+        });
     }
 
     const endMessage = (id) => {
-        fetch(packagejson.ipurl + "/api/telegram/EndMessage/" + id);
-        getMessage().then((Result) => {dispatch(set(Result))});
+        fetch(packagejson.ipurl + "/api/telegram/EndMessage/" + id).then(() => {
+            getMessage().then((Result) => {dispatch(set(Result))});
+        });
     }
 
     if(openMessage === false){
@@ -165,7 +169,7 @@ export default function GroupOpen(props) {
                             <input onClick={()=> processMesasge(message[0][3])} onChange={(event) => textHandlerAnswer(event) } onKeyDown={handleKeyPressAnswer} name="message" id="message" placeholder="Напишите ответ..."></input>
                             <button onClick={() => sendMessage()}>Ответить</button>
                             <button onClick={() => setShowComment(!showComments)}>Комментарии</button>
-                            <button onClick={() =>  (message[0][3])}>Завершить</button>
+                            <button onClick={() =>  endMessage(message[0][3])}>Завершить</button>
                         </div>
                     </div>
                     <div id="comments" className={ showComments? 'slide-in' : 'slide-out'}> 

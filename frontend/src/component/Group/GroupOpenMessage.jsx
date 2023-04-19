@@ -35,10 +35,10 @@ export default function GroupOpenMessage(props) {
 
     // message selection
     const activeMessage = async (id, messageId) => {
-        getMessage().then((Result) => {dispatch(set(Result))});
-
         // marks that messages have been viewed 
-        fetch(packagejson.ipurl + '/api/telegram/CheckMessage/' + messageId);
+        fetch(packagejson.ipurl + '/api/telegram/CheckMessage/' + messageId).then(() => {
+            getMessage().then((Result) => {dispatch(set(Result))});
+        });
 
         for(let i = 0; i <= Message.length; i++){
             // message html element
