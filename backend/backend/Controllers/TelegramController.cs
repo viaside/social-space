@@ -158,5 +158,40 @@ namespace OpenTelegramAPI.Contollers
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
         }
+
+        [Route("ProcessMessage/{MessageId}")]
+        [HttpPost("{MessageId}")]
+        public IActionResult ProcessMessage(string MessageId)
+        {
+            ResponseType type = ResponseType.Success;
+            try
+            {
+
+                _db.ProcessMessage(MessageId);
+                return Ok(ResponseHandler.GetAppResponse(type, MessageId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
+
+        [Route("EndMessage/{MessageId}")]
+        [HttpPost("{MessageId}")]
+        public IActionResult EndMessage(string MessageId)
+        {
+            ResponseType type = ResponseType.Success;
+            try
+            {
+
+                _db.EndMessage(MessageId);
+                return Ok(ResponseHandler.GetAppResponse(type, MessageId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
+
     }
 }

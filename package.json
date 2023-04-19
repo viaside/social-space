@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "client": "cd frontend && npm start",
+    "backend": "cd backend/backend && dotnet run "
+  }
+}

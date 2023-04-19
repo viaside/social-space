@@ -77,12 +77,6 @@ export default function ChatList() {
             console.log(Result);
         });
 
-        // // chat html element
-        // let element = document.getElementById(username);
-
-        // // set style active group
-        // element.style.backgroundColor = "#353535";
-
         chats.forEach(el => {
             let element = document.getElementById(el[0]);
             if(el[0] === username){
@@ -116,7 +110,7 @@ export default function ChatList() {
                         </div>
                         <div className='text'>
                             <p className='userName'>{ data[0] }</p>
-                            <p className='lastMessage'>{ data[2]? data[2]: <p className='gray'>*Изображение</p> }</p>
+                            <p className='lastMessage'>{ data[2]? data[2].length >= 100? data[2].substr(0, 50) + " . . ." : data[2]: <p className='gray'>*Изображение</p> }</p>
                         </div>
                             { data[3]? null : <p className='countMarker'>{data[4]}</p> }
                     </div>

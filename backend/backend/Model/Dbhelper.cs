@@ -201,7 +201,8 @@ namespace web_app.Model
                 TextPhoto = row.TextPhoto,
                 Answers = row.Answers,
                 Comments = row.Comments,
-                isCheck = row.isCheck
+                isCheck = row.isCheck,
+                Status = row.Status
             }));
             return response;
         }
@@ -229,6 +230,7 @@ namespace web_app.Model
                     dbTable.Answers = null;
                     dbTable.Comments = null;
                     dbTable.isCheck = false;
+                    dbTable.Status = 0;
                 }
             }
             else
@@ -248,6 +250,7 @@ namespace web_app.Model
                 dbTable.Answers = null;
                 dbTable.Comments = null;
                 dbTable.isCheck = false;
+                dbTable.Status = 0;
                 _context.MessageInfo.Add(dbTable);
                 _context.SaveChanges();
             }
@@ -310,6 +313,29 @@ namespace web_app.Model
             if (dbTable != null)
             {
                 dbTable.isCheck = true;
+                if(dbTable.Status == null){
+                    dbTable.Status = 1;
+                }
+            }
+            _context.SaveChanges();
+        }
+
+        public void ProcessMessage(string MessageId)
+        {
+            MessageInfo dbTable = new MessageInfo();
+            dbTable = _context.MessageInfo.Where(d => d.MessageId.Equals(MessageId)).FirstOrDefault();
+            if( dbTable != null){
+                dbTable.Status = 2;
+            }
+            _context.SaveChanges();
+        }
+        
+        public void EndMessage(string MessageId)
+        {
+            MessageInfo dbTable = new MessageInfo();
+            dbTable = _context.MessageInfo.Where(d => d.MessageId.Equals(MessageId)).FirstOrDefault();
+            if( dbTable != null){
+                dbTable.Status = 3;
             }
             _context.SaveChanges();
         }

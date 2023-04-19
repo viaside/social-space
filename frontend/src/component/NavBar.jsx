@@ -38,9 +38,11 @@ export default function NavBar() {
                 <div>
                     <LightLogo height={40}/>
                     <a href="/Chat">Чаты</a>
-                    {chat != 0 ? <p className="countMarker">{ chat }</p> : null}
+                    {chat !== 0 ? <p className="countMarker">{ chat }</p> : null}
+                    <a href="/GroupChat">Чаты групп</a>
+                    {group !== 0 ? <p className="countMarker">{ group }</p> : null}
                     <a href="/Group">Группы</a>
-                    {group != 0 ? <p className="countMarker">{ group }</p> : null}
+                    {group !== 0 ? <p className="countMarker">{ group }</p> : null}
                     <a href="/Stats">Статистика</a>
                     <a href="/">FAQ</a>
                 </div>

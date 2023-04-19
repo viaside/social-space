@@ -19,23 +19,14 @@ export default function GroupOpenMessage(props) {
     // set message array
     if(dataRedux != null){
         let newData = [...dataRedux];
-        newData.sort(function(a,b){
-            // sort by date
-            if(a.date < b.date){
-                return 1;
-            }
-            if(a.date > b.date){
-                return -1;
-            }
-            return 0;
-            }).forEach(element => {
+        newData.forEach(element => {
                 if((element.type === "Group" && element.nameFrom === idChat) || (element.type === "Supergroup" && element.nameFrom === idChat)){
                     // image presence check
                     if(element.text !== null){
-                        let data = [element.text, element.date, element.chatId, element.messageId, element.username, element.answers, element.comments, element.userAvatar, element.textPhoto, element.isCheck];
+                        let data = [element.text, element.date, element.chatId, element.messageId, element.username, element.answers, element.comments, element.userAvatar, element.textPhoto, element.isCheck, element.status];
                         Message.push(data);
                     } else{
-                        let data = ["*Изображение", element.date, element.chatId, element.messageId, element.username, element.answers, element.comments, element.userAvatar, element.textPhoto, element.isCheck];
+                        let data = ["*Изображение", element.date, element.chatId, element.messageId, element.username, element.answers, element.comments, element.userAvatar, element.textPhoto, element.isCheck, element.status];
                         Message.push(data);
                     }
                 }
@@ -65,12 +56,17 @@ export default function GroupOpenMessage(props) {
         }
     }
 
-
     if(openChat === true){
         return(
             <div className='ChatListAll'>
-            {Message.filter((element, index) => {
-                return Message.indexOf(element) === index;
+            {Message.sort(function (a,b) {
+                if(a>b){
+                    return 1;
+                }
+                if(a<b){
+                    return -1;
+                }
+                return 0
             }).map((data, index) => {
                 return (
                     <div className="ChatList" id={"message"+index} key = {index} onClick = {() => {
@@ -87,6 +83,12 @@ export default function GroupOpenMessage(props) {
                                 <p className='lastMessage'>{ data[0] }</p>
                                 {data[9]?null : <p className='messageMarker'></p>}
                             </div>
+                        <div>
+                            <p style={{textAlign: "right", color: "red"}}>{data[10] === 0 || data[10] === null? "ждет ответа" : null}</p>
+                            <p style={{textAlign: "right", color: "yellow"}}>{data[10] === 1? "просмотренно" : null}</p>
+                            <p style={{textAlign: "right", color: "green"}}>{data[10] === 2? "в процессе" : null}</p>
+                            <p style={{textAlign: "right", color: "gray"}}>{data[10] === 3? "закончен" : null}</p>
+                        </div>
                         </div>
                     </div>
                 ) 

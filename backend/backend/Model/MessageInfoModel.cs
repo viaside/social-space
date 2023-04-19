@@ -16,6 +16,7 @@
         public byte[]? TextPhoto { get; set; }
         public string[]? Answers { get; set; } 
         public string[]? Comments { get; set; } 
-        public bool? isCheck{ get; set; }
+        public bool? isCheck { get; set; }
+        public int? Status { get; set; }
     }
 }

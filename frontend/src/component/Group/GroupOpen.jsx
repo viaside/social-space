@@ -17,6 +17,7 @@ export default function GroupOpen(props) {
     const [Answer, setAnswer] = useState();
     const [Comment, setComment] = useState();
     const [showfullScreenImage, setShowFullScreenImage] = useState(false);
+    const [showComments, setShowComment] = useState(false);
     
     // message array 
     let message = [];
@@ -115,7 +116,16 @@ export default function GroupOpen(props) {
         }
     } 
 
-    
+    const processMesasge = (id) => {
+        fetch(packagejson.ipurl + "/api/telegram/ProcessMessage/" + id);
+        getMessage().then((Result) => {dispatch(set(Result))});
+    }
+
+    const endMessage = (id) => {
+        fetch(packagejson.ipurl + "/api/telegram/EndMessage/" + id);
+        getMessage().then((Result) => {dispatch(set(Result))});
+    }
+
     if(openMessage === false){
         return null
     } else{
@@ -142,24 +152,26 @@ export default function GroupOpen(props) {
                     <div>
                         <h1>Ответы</h1>
                         <div className="groupBlockChat">
-                            { message[0][5]? message[0][5].reverse().map((answer, index) => {
+                            { message[0][5]? message[0][5].slice().reverse().map((answer, index) => {
                                 return(
-                                    <div className="groupMessage" key={index}>
+                                    <div className="groupMessage" key={index} style={{width:400}}>
                                         <p className = "text">{ answer.split('/')[0] }</p>
                                         <p className = "time">{ answer.split('/')[1] }</p>
                                     </div>
                                 )
                             }) : null}
                         </div>
-                        <div>
-                            <input onChange={(event) => textHandlerAnswer(event) } onKeyDown={handleKeyPressAnswer} name="message" id="message" placeholder="Напишите ответ..."></input>
+                        <div className="answer">
+                            <input onClick={()=> processMesasge(message[0][3])} onChange={(event) => textHandlerAnswer(event) } onKeyDown={handleKeyPressAnswer} name="message" id="message" placeholder="Напишите ответ..."></input>
                             <button onClick={() => sendMessage()}>Ответить</button>
+                            <button onClick={() => setShowComment(!showComments)}>Комментарии</button>
+                            <button onClick={() =>  (message[0][3])}>Завершить</button>
                         </div>
                     </div>
-                    <div>
+                    <div id="comments" className={ showComments? 'slide-in' : 'slide-out'}> 
                         <h1>Комментарий</h1>
                         <div className="groupBlockChat">
-                            { message[0][6]? message[0][6].reverse().map((comments, index) => {
+                            { message[0][6] != null? message[0][6].slice().reverse().map((comments, index) => {
                                 return(
                                     <div className="groupMessage" key={index}>
                                         <p className = "text">{ comments.split('/')[0] }</p>
@@ -172,7 +184,7 @@ export default function GroupOpen(props) {
                             <input onChange={(event) => textHandlerComent(event) } onKeyDown={handleKeyPressComment} name="comment" id="comment" placeholder="Напишите комментарий..."></input>
                             <button onClick={() => sendComment()}>Написать комментарий</button>
                         </div>
-                    </div>
+                    </div> 
                 </div>
                 <button onClick={() => dispatch(close())} className="close">Закрыть</button>
             </div>

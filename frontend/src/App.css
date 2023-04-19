@@ -103,14 +103,15 @@ body{
 .ChatList{
   display: inline-flex;
   align-items: center;
-  height: 100px;
   color: white;
   border-bottom: 1px solid #716F6F;
   padding: 10px;
+  animation: show 1s ease;
 }
 
 .ChatList:hover{
   background-color: #353535;
+  cursor: pointer;
 }
 
 
@@ -143,6 +144,7 @@ body{
 
 .GroupList:hover{
   background-color: #353535;
+  cursor: pointer;
 }
 
 
@@ -250,17 +252,24 @@ body{
   border-radius: 5px;
   box-shadow: var(--shadow-default);
   margin-left: auto;
+  animation: 1s show ease;
 }
 
 
 .ChatInfoElement {
   text-align: right;
-  width: 250px;
+  width: 300px;
   padding: 5px;
   margin: 20px;
   background-color: #3D3D3D;
   border-radius: 5px;
   box-shadow: var(--shadow-default);
+  animation: 1s show ease;
+}
+
+@keyframes show {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .ChatInfoElementMessage{
@@ -298,7 +307,6 @@ body{
   box-shadow: var(--shadow-default);
   border-radius: 10px;
   width: 93%;
-  height: 50%;
 }
 
 .userName{
@@ -346,7 +354,7 @@ body{
   border-radius: 10px;
   box-shadow: var(--shadow-default);
   padding: 10px;
-  width: 250px;
+  width: 50vw;
 }
 
 .GroupMessageText img:hover{
@@ -355,7 +363,48 @@ body{
 
 .groupAnswerComment{
   display: flex;
+  flex-direction: column;
   justify-content: center;
+}
+
+#comments{
+  position: fixed;
+  right: 10px;
+  background: #3f3e3e;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: var(--shadow-default);
+  overflow: hidden;
+  transform: translateX(100%);
+  -webkit-transform: translateX(100%);
+}
+
+.slide-in {
+  animation: slide-in 0.5s forwards;
+  -webkit-animation: slide-in 0.5s forwards;
+}
+
+.slide-out {
+  animation: slide-out 0.5s forwards;
+  -webkit-animation: slide-out 0.5s forwards;
+}
+  
+@keyframes slide-in {
+  100% { transform: translateX(0%); }
+}
+
+@-webkit-keyframes slide-in {
+  100% { -webkit-transform: translateX(0%); }
+}
+  
+@keyframes slide-out {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(+100%); }
+}
+
+@-webkit-keyframes slide-out {
+  0% { -webkit-transform: translateX(0%); }
+  100% { -webkit-transform: translateX(+100%); }
 }
 
 .groupAnswerComment input{
@@ -370,6 +419,7 @@ body{
   background-color: #3D3D3D;
   box-shadow: var(--shadow-default);
   border-radius: 5px;
+  animation: show 1s ease;
 }
 
 .close{
@@ -582,6 +632,43 @@ body{
   align-items: center;
   text-align: center;
 }
+
+.GroupChatInfoElement{
+  display: flex;
+  align-items: center;
+  width: 400px;
+  padding: 5px;
+  margin: 20px;
+  background-color: #3D3D3D;
+  border-radius: 5px;
+  box-shadow: var(--shadow-default);
+  margin-right: auto;
+}
+
+.GroupChatMessage{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.GroupChatMessage .userName{
+  font-size: 18px;
+  font-weight: bold;
+  padding-bottom: 0px;
+}
+
+.GroupChatMessage .time{
+  display: flex;
+  justify-content: end;
+  align-items: end;
+}
+
+.GroupChatMessage .time p{
+  color: #716F6F;
+  position: relative;
+  right: 0;
+}
+
 
 /* styles element*/
 p{

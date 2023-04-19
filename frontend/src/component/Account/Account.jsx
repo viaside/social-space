@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component, useEffect } from "react";
 import getCookie from "../../features/getCookie";
 import AccountInfo from "./AccountInfo/AccountInfo"
 import AccountBots from "./AccountInfo/AccountBots"
@@ -31,11 +31,6 @@ export default class Profile extends Component {
 
         // get login state from cookie
         await this.setState({ isLogin: getCookie("isLogin") });
-        let elInfo = document.getElementById("info")
-
-        //mark deffault active block
-        elInfo.style.backgroundColor = "#1E1E1E";
-        
     }
 
     // marks info block
@@ -81,7 +76,7 @@ export default class Profile extends Component {
                                 <p className="accountAvatar">{getCookie("username")[0].toUpperCase()}</p>
                                 <h1>{getCookie("username")}</h1>
                             </div>
-                            <div onClick={this.openInfo} id="info">
+                            <div onClick={this.openInfo} id="info" style={{backgroundColor: "#1E1E1E"}}>
                                 <h1>Основная информация</h1>
                             </div>
                             <div onClick={this.openBots} id="bots">

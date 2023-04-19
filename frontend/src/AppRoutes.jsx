@@ -1,4 +1,5 @@
 import Chat from './pages/Chat';
+import GroupChat from './pages/GroupChat';
 import Group from './pages/Group';
 import Channel from './pages/Channel';
 import Stats from './pages/Stats';
@@ -13,6 +14,10 @@ const AppRoutes = [
     {
         path: '/Chat',
         element: <Chat />
+    },
+    {
+        path: '/GroupChat',
+        element: <GroupChat />
     },
     {
         path: '/Group',

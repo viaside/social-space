@@ -59,14 +59,15 @@ export default class AccountBots extends Component {
     deleteBot(id){
         // delete bot
         fetch(packagejson.ipurl + "/api/user/DeleteBot/"+ this.state.data.id +"&"+ id)
-        .then(
+        .then((Response) => Response.json())
+        .then(() => {
             // update user info
             fetch(packagejson.ipurl + '/api/user/GetInfo/' + getCookie("userId"))
             .then((Response) => Response.json())
             .then(async (Result) => {
                 this.setState({ data: Result.responseData });
             })
-        );
+        });
     }
 
     render() {
