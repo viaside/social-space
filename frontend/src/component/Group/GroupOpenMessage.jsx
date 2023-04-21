@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { open } from '../../features/redux/openMessageSlice';
 import { set } from "../../features/redux/dataSlice";
@@ -10,6 +10,7 @@ export default function GroupOpenMessage(props) {
     // redux state
     const openChat = useSelector((state) => state.openChat.value)
     const idChat = useSelector((state) => state.idChat.value)
+    const idMessage = useSelector((state) => state.idMessage.value)
     const dataRedux = useSelector((state) => state.data.value);
     const dispatch = useDispatch()
   
@@ -19,7 +20,15 @@ export default function GroupOpenMessage(props) {
     // set message array
     if(dataRedux != null){
         let newData = [...dataRedux];
-        newData.forEach(element => {
+        newData.sort(function (a,b) {
+            if(a.date<b.date){
+                return 1;
+            }
+            if(a.date>b.date){
+                return -1;
+            }
+            return 0
+        }).forEach(element => {
                 if((element.type === "Group" && element.nameFrom === idChat) || (element.type === "Supergroup" && element.nameFrom === idChat)){
                     // image presence check
                     if(element.text !== null){
@@ -33,46 +42,37 @@ export default function GroupOpenMessage(props) {
         });
     }
 
+    useEffect(() => {
+        let id = idMessage;
+        activeMessage(id);
+    }, [dataRedux]);
+
     // message selection
-    const activeMessage = async (id, messageId) => {
+    const activeMessage = async (messageId) => {
         // marks that messages have been viewed 
         fetch(packagejson.ipurl + '/api/telegram/CheckMessage/' + messageId).then(() => {
-            getMessage().then((Result) => {dispatch(set(Result))});
+            getMessage().then((Result) => {dispatch(set(Result))})
         });
 
-        for(let i = 0; i <= Message.length; i++){
-            // message html element
-            let element = document.getElementById("message"+i);
-
-            if(element){
-                if(id === "message"+i){
-                    // set active message style
-                    element.style.backgroundColor = "#353535";
-                } else{
-                    // clear other message style
-                    element.style.backgroundColor = null;
-                }
+        Message.forEach(el => {
+            let element = document.getElementById(el[3])
+            if(el[3] === messageId){
+                element.style.backgroundColor = "#353535";
+            } else{
+                element.style.backgroundColor = null;
             }
-        }
+        });
     }
 
     if(openChat === true){
         return(
             <div className='ChatListAll'>
-            {Message.sort(function (a,b) {
-                if(a>b){
-                    return 1;
-                }
-                if(a<b){
-                    return -1;
-                }
-                return 0
-            }).map((data, index) => {
+            {Message.map((data, index) => {
                 return (
-                    <div className="ChatList" id={"message"+index} key = {index} onClick = {() => {
+                    <div className="ChatList" id={data[3]} key = {index} onClick = {() => {
                         dispatch(open());
                         dispatch(setMessageChat(data[3]));
-                        activeMessage("message"+index, data[3])
+                        activeMessage(data[3])
                     }}>
                         <div className='avatar'>
                             <img src={ "data:image/jpeg;base64," + data[7] } alt="avatar" width={70}/>

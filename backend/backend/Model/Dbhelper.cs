@@ -313,7 +313,7 @@ namespace web_app.Model
             if (dbTable != null)
             {
                 dbTable.isCheck = true;
-                if(dbTable.Status == null){
+                if(dbTable.Status == null ||  dbTable.Status == 0){
                     dbTable.Status = 1;
                 }
             }

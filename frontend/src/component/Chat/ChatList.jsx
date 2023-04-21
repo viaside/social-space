@@ -73,11 +73,8 @@ export default function ChatList() {
 
     const activeChat = async (id, username) => {
         // marks that messages have been viewed      
-        fetch(packagejson.ipurl + '/api/telegram/CheckMessage/' + id)
-        .then((Response) => Response.json())
-        .then((Result) => {
+        fetch(packagejson.ipurl + '/api/telegram/CheckMessage/' + id).then(() => {
             getMessage().then((Result) => {dispatch(set(Result))});
-            
         });
 
         chats.forEach(el => {

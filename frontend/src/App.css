@@ -134,11 +134,13 @@ body{
 }
 
 .GroupList{
+  animation: 1s show;
   display: inline-flex;
   align-items: center;
-  height: 100px;
+  height: 50px;
   color: white;
-  border-bottom: 1px solid #716F6F;
+  align-items: center;
+  justify-content: center;
   padding: 10px;
 }
 
@@ -200,7 +202,7 @@ body{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  animation: show1 0.2s 1;
+  animation: show 0.2s 1;
   border: var(--border-default);
   border-right: none;
 }
@@ -268,8 +270,15 @@ body{
 }
 
 @keyframes show {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  0% {
+    opacity: 0;
+    transform: scale(0.5, 0.5);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
 }
 
 .ChatInfoElementMessage{
@@ -331,7 +340,7 @@ body{
   justify-content: space-between;
   background-color: #353535;
   width: 70vw;
-  animation: show1 0.2s 1;
+  animation: show 0.2s;
   border: var(--border-default);
 }
 
@@ -643,6 +652,7 @@ body{
   border-radius: 5px;
   box-shadow: var(--shadow-default);
   margin-right: auto;
+  animation: 1s show;
 }
 
 .GroupChatMessage{
@@ -697,7 +707,6 @@ input {
   color: white;
   border: 2px solid #005BFF;
   border-radius: 8px;
-  animation: show2 0.5s 1;
 }
 
 

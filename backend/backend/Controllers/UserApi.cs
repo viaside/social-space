@@ -214,7 +214,7 @@ namespace web_app.Controllers
 
 
                     // add webhook in telegram bot api
-                    string pathserv = "https://b0e8-94-29-126-191.ngrok-free.app/api/webhook/";
+                    string pathserv = "https://ebf7-94-29-126-191.ngrok-free.app/api/webhook/";
                     string pathWH = "https://api.telegram.org/bot" + BotId + "/setWebhook?url=" + pathserv + "&secret_token=" + BotId.Replace(":", "-");
                     using HttpResponseMessage responseIdwh = await client.GetAsync(pathWH);
                     string dataIdwh = await responseId.Content.ReadAsStringAsync();
