@@ -9,5 +9,6 @@ namespace web_app.EfCore
 
         public DbSet<UsersInfo> UserInfo { get; set; }
         public DbSet<MessageInfo> MessageInfo { get; set; }
+        public DbSet<GroupInfo> GroupInfo { get; set; }
     }
 }

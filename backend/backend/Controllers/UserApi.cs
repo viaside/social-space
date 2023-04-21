@@ -276,5 +276,72 @@ namespace web_app.Controllers
                 return BadRequest(ResponseHandler.GetExceptionResponse(ex));
             }
         }
+
+        [Route("ConnectGroup/{UserId}&{name}")]
+        [HttpPost("{UserId}&{name}")]
+        public IActionResult ConnectGroup(int UserId, string name)
+        {
+            ResponseType type = ResponseType.Success;
+            try
+            {
+                UserInfoModel userInfoModel = new UserInfoModel();
+                userInfoModel.Id = UserId;
+
+                _db.ConnectGroup(userInfoModel, name);
+                return Ok(ResponseHandler.GetAppResponse(type, name));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
+
+
+        [Route("AddGroup/{UserId}&{Name}")]
+        [HttpPost("{UserId}&{Name}")]
+        public IActionResult AddGroup(int UserId, string Name)
+        {
+            ResponseType type = ResponseType.Success;
+            try
+            {
+                GroupInfoModel groupInfoModel = new GroupInfoModel();
+                groupInfoModel.Id = UserId;
+                groupInfoModel.Name = Name;
+
+                List<string> list = new List<string>();
+                list.Add(UserId.ToString());
+                string[] str = list.ToArray();
+                
+                groupInfoModel.Members = str;
+                _db.AddGroup(groupInfoModel);
+
+                UserInfoModel userInfoModel = new UserInfoModel();
+                userInfoModel.Id = UserId;
+                _db.ConnectGroup(userInfoModel, Name);
+                return Ok(ResponseHandler.GetAppResponse(type, Name));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
+
+        [Route("AddMember/{GroupId}&{UserId}&{Role}")]
+        [HttpPost("{GroupId}&{UserId}&{Role}")]
+        public IActionResult AddMember(int GroupId, int UserId, string Role)
+        {
+            ResponseType type = ResponseType.Success;
+            try
+            {
+                GroupInfoModel groupInfoModel = new GroupInfoModel();
+                groupInfoModel.Id = UserId;                
+                _db.AddMember(groupInfoModel, UserId.ToString()+ "," + Role);
+                return Ok(ResponseHandler.GetAppResponse(type, GroupId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
     }
 }

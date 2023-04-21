@@ -5,6 +5,7 @@ import AccountBots from "./AccountInfo/AccountBots"
 import AccountSetting from "./AccountInfo/AccountSetting"
 import packagejson from "../../../package.json";
 import loader from "../../illustration/loader.svg";
+import AccountGroup from "./AccountInfo/AccountGroup";
 
 export default class Profile extends Component {
     constructor(){
@@ -17,6 +18,7 @@ export default class Profile extends Component {
         }
 
         this.openInfo = this.openInfo.bind(this);
+        this.openGroup = this.openGroup.bind(this);
         this.openBots = this.openBots.bind(this);
         this.openSetting = this.openSetting.bind(this);
     }
@@ -35,11 +37,13 @@ export default class Profile extends Component {
 
     // marks info block
     openInfo(){
-        this.setState({Element: <AccountInfo/>})
         let elInfo = document.getElementById("info")
         let elBots = document.getElementById("bots")
         let elSetting = document.getElementById("setting")
+        let elGroup = document.getElementById("group")
+        this.setState({Element: <AccountInfo/>})
         elInfo.style.backgroundColor = "#1E1E1E";
+        elGroup.style.backgroundColor = "#353535";
         elBots.style.backgroundColor = "#353535";
         elSetting.style.backgroundColor = "#353535";
     }
@@ -50,7 +54,9 @@ export default class Profile extends Component {
         let elInfo = document.getElementById("info")
         let elBots = document.getElementById("bots")
         let elSetting = document.getElementById("setting")
+        let elGroup = document.getElementById("group")
         elInfo.style.backgroundColor = "#353535";
+        elGroup.style.backgroundColor = "#353535";
         elBots.style.backgroundColor = "#1E1E1E";
         elSetting.style.backgroundColor = "#353535";
     }
@@ -61,9 +67,23 @@ export default class Profile extends Component {
         let elInfo = document.getElementById("info")
         let elBots = document.getElementById("bots")
         let elSetting = document.getElementById("setting")
+        let elGroup = document.getElementById("group")
         elInfo.style.backgroundColor = "#353535";
+        elGroup.style.backgroundColor = "#353535";
         elBots.style.backgroundColor = "#353535";
         elSetting.style.backgroundColor = "#1E1E1E";
+    }
+
+    openGroup(){
+        this.setState({Element: <AccountGroup/>});
+        let elInfo = document.getElementById("info")
+        let elBots = document.getElementById("bots")
+        let elSetting = document.getElementById("setting")
+        let elGroup = document.getElementById("group")
+        elInfo.style.backgroundColor = "#353535";
+        elGroup.style.backgroundColor = "#1E1E1E";
+        elBots.style.backgroundColor = "#353535";
+        elSetting.style.backgroundColor = "#353535";
     }
 
     render() {
@@ -78,6 +98,9 @@ export default class Profile extends Component {
                             </div>
                             <div onClick={this.openInfo} id="info" style={{backgroundColor: "#1E1E1E"}}>
                                 <h1>Основная информация</h1>
+                            </div>
+                            <div onClick={this.openGroup} id="group">
+                                <h1>Группа</h1>
                             </div>
                             <div onClick={this.openBots} id="bots">
                                 <h1>Добавленные боты</h1>

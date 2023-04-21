@@ -42,6 +42,8 @@ namespace web_app.Model
                 Password = dataList.Password,
                 UsingBots = dataList.UsingBots,
                 Settings = dataList.Settings,
+                Group = dataList.Group,
+                role = dataList.role
             };
         }
 
@@ -176,6 +178,56 @@ namespace web_app.Model
             if (dbTable != null)
             {
                    dbTable.Settings = setting;
+            }
+            _context.SaveChanges();
+        }
+        public void ConnectGroup(UserInfoModel userInfoModel, string GroupName)
+        {
+            UsersInfo dbTable = new UsersInfo();
+            dbTable = _context.UserInfo.Where(d => d.Id.Equals(userInfoModel.Id)).FirstOrDefault();
+            
+            GroupInfo group = new GroupInfo();
+            group = _context.GroupInfo.Where(d => d.Name.Equals(GroupName)).FirstOrDefault();
+
+            if (dbTable != null)
+            {
+                if (dbTable.Group != null)
+                {
+                    string[] stringsDB = dbTable.Group;
+                    string[] strings = { (group.Id).ToString() + ":" +  group.Name };
+                    string[] strings1 = strings!.Concat(stringsDB).ToArray();
+                    dbTable.Group = strings1;
+                }
+                else
+                {
+                    string[] strings = { (group.Id).ToString() + ":" +  group.Name };
+                    dbTable.Group = strings;
+                }
+            }
+            _context.SaveChanges();
+        }
+
+        public void AddGroup(GroupInfoModel groupInfoModel)
+        {
+            GroupInfo dbTable = new GroupInfo();
+
+            //POST
+            dbTable.Name = groupInfoModel.Name;
+            dbTable.Members = groupInfoModel.Members;
+            _context.GroupInfo.Add(dbTable);
+            _context.SaveChanges();
+        }
+
+        public void AddMember(GroupInfoModel groupInfoModel, string member)
+        {
+            GroupInfo dbTable = new GroupInfo();
+            dbTable = _context.GroupInfo.Where(d => d.Id.Equals(groupInfoModel.Id)).FirstOrDefault();
+            if (dbTable != null)
+            {
+                string[] stringsDB = dbTable.Members;
+                string[] strings = {member};
+                string[] strings1 = strings!.Concat(stringsDB).ToArray();
+                dbTable.Members = strings1;
             }
             _context.SaveChanges();
         }
