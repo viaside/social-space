@@ -1,13 +1,10 @@
 ﻿using System.Data.SqlTypes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;          
-using System.ComponentModel.DataAnnotations;  
 
 namespace web_app.EfCore
 {
     [Table("MessageInfo")]
-    // [Index(nameof(MessageId), IsUnique = true)]
     public class MessageInfo
     {
         [Key,Required]

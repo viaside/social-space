@@ -14,6 +14,5 @@ namespace web_app.EfCore
         public string[]? UsingBots { get; set; }
         public string[]? Settings { get; set; }
         public string[]? Group { get; set; }
-        public string[]? role  { get; set; }
     }
 }

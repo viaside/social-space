@@ -43,7 +43,6 @@ namespace web_app.Model
                 UsingBots = dataList.UsingBots,
                 Settings = dataList.Settings,
                 Group = dataList.Group,
-                role = dataList.role
             };
         }
 
@@ -181,7 +180,7 @@ namespace web_app.Model
             }
             _context.SaveChanges();
         }
-        public void ConnectGroup(UserInfoModel userInfoModel, string GroupName)
+        public void ConnectGroup(UserInfoModel userInfoModel, string GroupName, string Role)
         {
             UsersInfo dbTable = new UsersInfo();
             dbTable = _context.UserInfo.Where(d => d.Id.Equals(userInfoModel.Id)).FirstOrDefault();
@@ -194,13 +193,18 @@ namespace web_app.Model
                 if (dbTable.Group != null)
                 {
                     string[] stringsDB = dbTable.Group;
-                    string[] strings = { (group.Id).ToString() + ":" +  group.Name };
+                    string[] strings = { (group.Id).ToString() + ":" +  group.Name + ":" + Role };
                     string[] strings1 = strings!.Concat(stringsDB).ToArray();
+                    dbTable.Group = strings1;
+
+                    string[] stringsDBG = group.Members;
+                    string[] stringsG = { (group.Id).ToString() + ":" +  group.Name + ":" + Role };
+                    string[] strings1G = strings!.Concat(stringsDB).ToArray();
                     dbTable.Group = strings1;
                 }
                 else
                 {
-                    string[] strings = { (group.Id).ToString() + ":" +  group.Name };
+                    string[] strings = { (group.Id).ToString() + ":" +  group.Name + ":" + Role };
                     dbTable.Group = strings;
                 }
             }
@@ -216,6 +220,18 @@ namespace web_app.Model
             dbTable.Members = groupInfoModel.Members;
             _context.GroupInfo.Add(dbTable);
             _context.SaveChanges();
+        }
+
+        public GroupInfoModel GetGroupById(int Id)
+        {
+            GroupInfoModel response = new GroupInfoModel();
+            var dataList = _context.GroupInfo.Where(d => d.Id.Equals(Id)).FirstOrDefault();
+            return new GroupInfoModel()
+            {
+                Id = dataList.Id,
+                Name = dataList.Name,
+                Members = dataList.Members,
+            };
         }
 
         public void AddMember(GroupInfoModel groupInfoModel, string member)
