@@ -29,9 +29,6 @@ export default function GroupInfo(props) {
         }
     }, [props])
 
-    git config --global user.email "ivanvoloshiin@mail.ru"
-    git config --global user.name "ivan"
-
     return( 
         <div>
             <h1>{ GroupData.name }</h1>
