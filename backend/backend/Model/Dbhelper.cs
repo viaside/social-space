@@ -182,30 +182,42 @@ namespace web_app.Model
         }
         public void ConnectGroup(UserInfoModel userInfoModel, string GroupName, string Role)
         {
-            UsersInfo dbTable = new UsersInfo();
-            dbTable = _context.UserInfo.Where(d => d.Id.Equals(userInfoModel.Id)).FirstOrDefault();
+            // user table
+            UsersInfo user = new UsersInfo();
+            user = _context.UserInfo.Where(d => d.Id.Equals(userInfoModel.Id)).FirstOrDefault();
             
+            // group table
             GroupInfo group = new GroupInfo();
             group = _context.GroupInfo.Where(d => d.Name.Equals(GroupName)).FirstOrDefault();
 
-            if (dbTable != null)
+            if (user != null && group !=null)
             {
-                if (dbTable.Group != null)
+                // set user group
+                if (user.Group != null)
                 {
-                    string[] stringsDB = dbTable.Group;
-                    string[] strings = { (group.Id).ToString() + ":" +  group.Name + ":" + Role };
-                    string[] strings1 = strings!.Concat(stringsDB).ToArray();
-                    dbTable.Group = strings1;
-
-                    string[] stringsDBG = group.Members;
-                    string[] stringsG = { (group.Id).ToString() + ":" +  group.Name + ":" + Role };
-                    string[] strings1G = strings!.Concat(stringsDB).ToArray();
-                    dbTable.Group = strings1;
+                    string[] stringsDBUser = user.Group;
+                    string[] stringsUser = { (group.Id).ToString() + ":" +  group.Name + ":" + Role };
+                    string[] stringsNewUser = stringsUser!.Concat(stringsDBUser).ToArray();
+                    user.Group = stringsNewUser;
                 }
                 else
                 {
-                    string[] strings = { (group.Id).ToString() + ":" +  group.Name + ":" + Role };
-                    dbTable.Group = strings;
+                    string[] stringsUser = { (group.Id).ToString() + ":" +  group.Name + ":" + Role };
+                    user.Group = stringsUser;
+                }
+
+                // set group members
+                if (group.Members != null)
+                {
+                    string[] stringsDBUser = group.Members;
+                    string[] stringsUser = { (userInfoModel.Id).ToString() + ":" + Role };
+                    string[] stringsNewUser = stringsUser!.Concat(stringsDBUser).ToArray();
+                    group.Members = stringsNewUser;
+                }
+                else
+                {
+                    string[] stringsUser = { (userInfoModel.Id).ToString() + ":" + Role };
+                    group.Members = stringsUser;
                 }
             }
             _context.SaveChanges();
@@ -217,7 +229,6 @@ namespace web_app.Model
 
             //POST
             dbTable.Name = groupInfoModel.Name;
-            dbTable.Members = groupInfoModel.Members;
             _context.GroupInfo.Add(dbTable);
             _context.SaveChanges();
         }

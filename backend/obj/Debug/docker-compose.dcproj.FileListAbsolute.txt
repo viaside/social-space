@@ -1,1 +1,0 @@
-D:\Проекты\social-space\backend\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache

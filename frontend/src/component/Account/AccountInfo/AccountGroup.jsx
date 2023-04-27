@@ -1,6 +1,7 @@
 import { Component } from "react";
 import getCookie from "../../../features/getCookie";
 import packagejson from "../../../../package.json";
+import MemberInfo from "./MemberInfo";
 
 export default class AccountGroup extends Component {
     constructor(){
@@ -9,7 +10,8 @@ export default class AccountGroup extends Component {
             data: [],
             Name: [],
             Group: [],
-            GroupInfo: <></>
+            GroupInfo: <></>,
+            MemberInfo: <></>
         }
 
         this.SetName = this.SetName.bind(this);
@@ -17,6 +19,7 @@ export default class AccountGroup extends Component {
         this.CreateGroup = this.CreateGroup.bind(this);
         this.ConnectGroup = this.ConnectGroup.bind(this);
         this.ChangeGroup = this.ChangeGroup.bind(this);
+        this.ShowInfoMember = this.ShowInfoMember.bind(this);
     }
     
     async componentDidMount() {
@@ -39,7 +42,10 @@ export default class AccountGroup extends Component {
             fetch(packagejson.ipurl + '/api/user/GetInfo/' + getCookie("userId"))
             .then((Response) => Response.json())
             .then(async (Result) => {
+                // set user info
                 this.setState({ data: Result.responseData });
+                this.setState({ Group: Result.responseData.group });
+                this.ChangeGroup(Result.responseData.group[0])
             });
         });
     }
@@ -52,7 +58,10 @@ export default class AccountGroup extends Component {
             fetch(packagejson.ipurl + '/api/user/GetInfo/' + getCookie("userId"))
             .then((Response) => Response.json())
             .then(async (Result) => {
+                // set user info
                 this.setState({ data: Result.responseData });
+                this.setState({ Group: Result.responseData.group });
+                this.ChangeGroup(Result.responseData.group[0])
             });
         });
     }
@@ -62,49 +71,73 @@ export default class AccountGroup extends Component {
         this.setState({ Name: event.target.value })
     }
 
+    async ShowInfoMember(data){
+        const responseMember = await fetch(packagejson.ipurl + "/api/user/GetInfo/" +  data[0]);
+        const MemberData = (await responseMember.json()).responseData;
+        let isChange = false;
+        this.setState({MemberInfo: 
+            <MemberInfo Id = {data[0]} Name ={data[1]} Role = {data[2]} 
+                        GroupList = {MemberData.group} KickMember = {this.KickMember} ChangeRoleMember = {this.ChangeRoleMember}/>
+        })
+    }
 
     async ChangeGroup(Group){
         const responseGroup = await fetch(packagejson.ipurl + "/api/user/GetGroup/" +  Group.split(":")[0]);
         const GroupData = (await responseGroup.json()).responseData;
 
-        let MembersData = []; 
+        let MembersData = [];
         
-        if(GroupData.members){
-            await Promise.all(GroupData.members.map(async element => {
-                let responseMembers = await fetch(packagejson.ipurl + "/api/user/GetInfo/" + element.split(":")[0]);
-                MembersData.push((await responseMembers.json()).responseData);
-            }));
-        }
-        
+        await Promise.all(GroupData.members.map(async (element) => {
+                let Member;
+                const responseGroup = await fetch(packagejson.ipurl + "/api/user/GetInfo/" +  element.split(":")[0]);
+                Member = (await responseGroup.json()).responseData;
+                MembersData.push([Member.id, Member.login, element.split(":")[1]]);
+        }));
+        this.setState({MemberInfo: <></>});
         this.setState({GroupInfo: 
-            <div>
-                <h1>Название группы - {GroupData.name}</h1>
-                <div>
-                    <h1>Участники:</h1>
-                    {MembersData? MembersData.sort((a,b) => {
-                        if(a.id > b.id){
-                            return 1;
-                        }
-                        if(a.id < b.id){
-                            return -1
-                        }
-                        return 0
-                    }).map((element, index) => {
-                        console.log(GroupData.members[index]);
-                        return (
-                            <div key={ index } style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-                                <h1>{ index+1 }</h1>
-                                <div>
-                                    <h1>Ник - { element.login }</h1>
-                                    <h1>Роль - { GroupData.members[index].split(":")[1] }</h1>
-                                </div>
-                            </div>
-                        )
-                    }): null}
-                </div>
+        <div>
+            <h1>{ GroupData.name }</h1>
+            <div className="GroupMembers">
+                {MembersData ? MembersData.map((element, index) => {
+                    return (
+                        <div key={ index } style={{display: "flex", alignItems: "center", justifyContent: "space-between"}} onClick={() => this.ShowInfoMember(element)}>
+                            <h1>{ index+1 }</h1>
+                            <p>{ element[1] }</p>
+                            <p style={{color: "#005BFF"}}>{ element[2] }</p>
+                        </div>
+                    )
+                }): null}
             </div>
-        });
+        </div>
+        })
     }
+    
+    async KickMember(id){
+        await fetch(packagejson.ipurl + "/api/user/KickMember/" + id).then((Result) => {
+            fetch(packagejson.ipurl + '/api/user/GetInfo/' + getCookie("userId"))
+            .then((Response) => Response.json())
+            .then(async (Result) => {
+                // set user info
+                this.setState({ data: Result.responseData });
+                this.setState({ Group: Result.responseData.group });
+                this.ChangeGroup(Result.responseData.group[0])
+            })
+        })
+    }
+
+    async ChangeRoleMember(id, NewRole){
+        await fetch(packagejson.ipurl + "/api/user/ChangeRoleMember/" + id + "&" + NewRole).then((Result) => {
+            fetch(packagejson.ipurl + '/api/user/GetInfo/' + getCookie("userId"))
+            .then((Response) => Response.json())
+            .then(async (Result) => {
+                // set user info
+                this.setState({ data: Result.responseData });
+                this.setState({ Group: Result.responseData.group });
+                this.ChangeGroup(Result.responseData.group[0])
+            })
+        })
+    }
+
 
     render() {
         return(
@@ -122,8 +155,9 @@ export default class AccountGroup extends Component {
                         return <button onClick={() => this.ChangeGroup(el)} key={ index }>{el.split(":")[1]}</button>
                     }): "Пусто"}
                 </div>
-                <div>
-                    {this.state.GroupInfo}
+                <div className="UserGroup">
+                    { this.state.GroupInfo }
+                    { this.state.MemberInfo }
                 </div>
             </div>
         );

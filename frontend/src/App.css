@@ -679,6 +679,41 @@ body{
   right: 0;
 }
 
+.UserGroup{
+  background-color: #3D3D3D;
+  display: flex;
+  border-radius: 10px;
+  padding: 20px;
+  height: 60vh;
+}
+
+.UserGroup h1{
+  color: #005BFF;
+}
+
+.GroupMembers{
+  overflow: auto;
+  height: 45vh;
+  margin: 20px;
+  padding: 20px;
+  border: solid 2px #005BFF;
+  border-radius: 6px;
+  width: 200px;
+}
+
+.GroupMembers h1{
+  padding: 0px;
+}
+
+.GroupMembers::-webkit-scrollbar {
+  width: 0.5em;
+}
+
+.GroupMembers::-webkit-scrollbar-thumb {
+  background-color: #252525;
+  border-radius: 100px;
+}
+
 
 /* styles element*/
 p{
