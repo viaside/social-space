@@ -24,7 +24,7 @@ export default function ChatOpen() {
     if(dataRedux != null){
         dataRedux.forEach(element => {
             if(element.username === idChat && element.type === "Private"){
-                let data = [element.text, element.date, element.chatId, element.messageId, element.username, element.answers, element.textPhoto];
+                let data = [element.text, element.date, element.chatId, element.messageId, element.username, element.answers, element.textPhoto, element.isCheck];
                 message.push(data);
             }
         });
@@ -100,7 +100,12 @@ export default function ChatOpen() {
         // marks that messages have been viewed 
         for (let i = 0; i < message.length; i++) {
             const element = message[i];
-            fetch(packagejson.ipurl + '/api/telegram/CheckMessage/' + element[3]);
+            if(element[7] === false){
+                fetch(packagejson.ipurl + '/api/telegram/CheckMessage/' + element[3])
+                .then(()=>{
+                    getMessage().then((Result) => {dispatch(set(Result))});
+                });
+            }
         }
     }
 

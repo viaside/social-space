@@ -42,10 +42,10 @@ export default function GroupOpenMessage(props) {
         });
     }
 
-    useEffect(() => {
-        let id = idMessage;
-        activeMessage(id);
-    }, [dataRedux]);
+    // useEffect(() => {
+    //     let id = idMessage;
+    //     activeMessage(id);
+    // }, dataRedux);
 
     // message selection
     const activeMessage = async (messageId) => {

@@ -5,9 +5,7 @@ using Telegram.Bot.Types;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using web_app.EfCore;
-using System.Net.WebSockets;
 using System.Text;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
 {
@@ -18,7 +16,7 @@ namespace Backend.Controllers
         static HttpClient client = new HttpClient();
         private readonly DbHelper _db;
 
-        static WebSocket webSocket;
+        static WebSocket? webSocket;
 
         public WebHookController(EF_DataContext eF_DataContext)
         {

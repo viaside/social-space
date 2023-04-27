@@ -214,7 +214,7 @@ namespace web_app.Controllers
 
 
                     // add webhook in telegram bot api
-                    string pathserv = "https://ebf7-94-29-126-191.ngrok-free.app/api/webhook/";
+                    string pathserv = "https://7bf0-178-173-104-255.ngrok-free.app/api/webhook/";
                     string pathWH = "https://api.telegram.org/bot" + BotId + "/setWebhook?url=" + pathserv + "&secret_token=" + BotId.Replace(":", "-");
                     using HttpResponseMessage responseIdwh = await client.GetAsync(pathWH);
                     string dataIdwh = await responseId.Content.ReadAsStringAsync();
@@ -309,7 +309,7 @@ namespace web_app.Controllers
                 groupInfoModel.Name = Name;
 
                 List<string> list = new List<string>();
-                list.Add(UserId.ToString()+":"+"Admin");
+                list.Add(UserId.ToString()+":"+"Admin:" );
                 string[] str = list.ToArray();
                 
                 groupInfoModel.Members = str;
@@ -354,6 +354,55 @@ namespace web_app.Controllers
                 GroupInfoModel data = _db.GetGroupById(id);
 
                 return Ok(ResponseHandler.GetAppResponse(type, data));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
+
+        [Route("GetGroupMembersInfo/{id}")]
+        [HttpGet("{id}")]
+        public IActionResult GetGroupMembersInfo(int id)
+        {
+            ResponseType type = ResponseType.Success;
+            try
+            {
+                List<UserInfoModel> data = _db.GetGroupMemberInfoById(id);
+
+                return Ok(ResponseHandler.GetAppResponse(type, data));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
+
+        [Route("KickMember/{GroupId}&{UserId}")]
+        [HttpPost("{GroupId}&{UserId}")]
+        public IActionResult KickMember(int GroupId, string UserId)
+        {
+            ResponseType type = ResponseType.Success;
+            try
+            {
+                _db.KickMember(GroupId, UserId);
+                return Ok(ResponseHandler.GetAppResponse(type, GroupId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHandler.GetExceptionResponse(ex));
+            }
+        }
+
+        [Route("ChangeRole/{GroupId}&{UserId}&{Role}")]
+        [HttpPost("{GroupId}&{UserId}&{Role}")]
+        public IActionResult ChangeRole(int GroupId, string UserId, string Role)
+        {
+            ResponseType type = ResponseType.Success;
+            try
+            {
+                _db.ChangeRole(GroupId, UserId, Role);
+                return Ok(ResponseHandler.GetAppResponse(type, GroupId));
             }
             catch (Exception ex)
             {

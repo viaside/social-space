@@ -37,7 +37,7 @@ export default function ChatList() {
                         if(paste){
                             let messageCount = 0;
                             newData.forEach((el) => {
-                                if(!el.isCheck && el.username === element.username){
+                                if(!el.isCheck && el.username === element.username & el.type === "Private"){
                                     messageCount++;
                                 }
                             });
@@ -47,7 +47,7 @@ export default function ChatList() {
                     } else {
                         let messageCount = 0;
                         newData.forEach((el) => {
-                            if(!el.isCheck && el.username === element.username){
+                            if(!el.isCheck && el.username === element.username & el.type === "Private"){
                                 messageCount++;
                             }
                         });
@@ -94,7 +94,6 @@ export default function ChatList() {
         let img = document.getElementById(id + "img");
         img.outerHTML = "<p id=" + id +" className='chatAvatarNull'>" + username[0].toUpperCase() + "</p>";
     }
-
     return(
         <div className='ChatListAll'>   
             {chats.map((data, index) => {

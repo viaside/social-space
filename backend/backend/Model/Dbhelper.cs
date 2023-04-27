@@ -245,6 +245,29 @@ namespace web_app.Model
             };
         }
 
+        public List<UserInfoModel> GetGroupMemberInfoById(int Id)
+        {
+            GroupInfoModel response = new GroupInfoModel();
+            var dataList = _context.GroupInfo.Where(d => d.Id.Equals(Id)).FirstOrDefault();
+
+            List<UserInfoModel> Members = new List<UserInfoModel> { };
+
+            for(int i = 0; i < dataList?.Members?.Length; i++)
+            {
+                int UserId = Int32.Parse(dataList.Members[i].Split(":")[0]); 
+                var User = _context.UserInfo.Where(d => d.Id.Equals(UserId)).FirstOrDefault();
+                Members.Add(new UserInfoModel()
+                {
+                    Id = User.Id,
+                    Login = User.Login,
+                    Group = User.Group,
+                });
+            }
+
+            return Members;
+        }
+
+
         public void AddMember(GroupInfoModel groupInfoModel, string member)
         {
             GroupInfo dbTable = new GroupInfo();
@@ -258,6 +281,96 @@ namespace web_app.Model
             }
             _context.SaveChanges();
         }
+
+        public void KickMember(int GroupID, string UserInfos)
+        {
+            GroupInfo dbTableGroup = new GroupInfo();
+            dbTableGroup = _context.GroupInfo.Where(d => d.Id.Equals(GroupID)).FirstOrDefault();
+            if (dbTableGroup != null)
+            {
+                string[] stringsDB = dbTableGroup.Members;
+                List<string> strings = new List<string> { };
+                for (int i = 0; i < stringsDB.Length; i++)
+                {
+                    if(stringsDB[i] != UserInfos)
+                    {
+                        strings.Add(stringsDB[i]);
+                    }
+                }
+                dbTableGroup.Members = strings.ToArray();
+            }
+
+            UsersInfo dbTableUser = new UsersInfo();
+            int UserId = Int32.Parse(UserInfos.Split(":")[0]);
+            dbTableUser = _context.UserInfo.Where(d => d.Id.Equals(UserId)).FirstOrDefault();
+            if(dbTableUser != null)
+            {
+                string[] stringsDB = dbTableUser.Group;
+                List<string> strings = new List<string> { };
+
+                for (int i = 0; i < stringsDB.Length; i++)
+                {
+                    var UserInfoSplit = UserInfos.Split(":");
+                    Console.WriteLine(UserInfoSplit[0] + ":" + dbTableGroup.Name + ":" + UserInfoSplit[1]);
+                    if(stringsDB[i] != GroupID + ":" + dbTableGroup.Name + ":" + UserInfoSplit[1])
+                    {
+                        strings.Add(stringsDB[i]);
+                    }
+                }
+                dbTableUser.Group = strings.ToArray();
+            }
+
+            _context.SaveChanges();
+        }
+
+        public void ChangeRole(int GroupID, string UserInfos, string Role)
+        {
+            GroupInfo dbTableGroup = new GroupInfo();
+            dbTableGroup = _context.GroupInfo.Where(d => d.Id.Equals(GroupID)).FirstOrDefault();
+            if (dbTableGroup != null)
+            {
+                string[] stringsDB = dbTableGroup.Members;
+                List<string> strings = new List<string> { };
+
+                for (int i = 0; i < stringsDB.Length; i++)
+                {
+                    if(stringsDB[i] == UserInfos)
+                    {
+                        strings.Add(UserInfos.Split(":")[0] + ":" + Role);
+                    } 
+                    else
+                    {
+                        strings.Add(stringsDB[i]);
+                    }
+                }
+                dbTableGroup.Members = strings.ToArray();
+            }
+
+            UsersInfo dbTableUser = new UsersInfo();
+            int UserId = Int32.Parse(UserInfos.Split(":")[0]);
+            dbTableUser = _context.UserInfo.Where(d => d.Id.Equals(UserId)).FirstOrDefault();
+            if(dbTableUser != null)
+            {
+                string[] stringsDB = dbTableUser.Group;
+                List<string> strings = new List<string> { };
+                for (int i = 0; i < stringsDB.Length; i++)
+                {
+                    if(stringsDB[i] == (dbTableGroup.Id  + ":" + dbTableGroup.Name + ":" + UserInfos.Split(":")[1]))
+                    {
+                        strings.Add(dbTableGroup.Id  + ":" + dbTableGroup.Name + ":" + Role);
+                    }
+                    else
+                    {
+                        strings.Add(stringsDB[i]);
+                    }
+                }
+                dbTableUser.Group = strings.ToArray();
+            }
+
+            _context.SaveChanges();
+        }
+
+
 
         // MessageDB
         public List<MessageInfoModel> GetMessage(string botId)
@@ -288,13 +401,36 @@ namespace web_app.Model
 
         public void AddMessage(MessageInfoModel messageInfoModel)
         {
-            MessageInfo dbTable = new MessageInfo();
-            if (messageInfoModel.Id > 0)
-            {
-                //PUT
-                dbTable = _context.MessageInfo.Where(d => d.Id.Equals(messageInfoModel.Id)).FirstOrDefault();
-                if (dbTable != null)
+            MessageInfo dbTableCheck = new MessageInfo();
+            dbTableCheck = _context.MessageInfo.Where(d => d.MessageId.Equals(messageInfoModel.MessageId)).FirstOrDefault();
+            if(dbTableCheck == null){
+                MessageInfo dbTable = new MessageInfo();
+                if (messageInfoModel.Id > 0)
                 {
+                    //PUT
+                    dbTable = _context.MessageInfo.Where(d => d.Id.Equals(messageInfoModel.Id)).FirstOrDefault();
+                    if (dbTable != null)
+                    {
+                        dbTable.BotId = messageInfoModel.BotId;
+                        dbTable.ChatId = messageInfoModel.ChatId;
+                        dbTable.MessageId = messageInfoModel.MessageId;
+                        dbTable.Type = messageInfoModel.Type;
+                        dbTable.Username = messageInfoModel.Username;
+                        dbTable.UserId = messageInfoModel.UserId;
+                        dbTable.UserAvatar = messageInfoModel.UserAvatar;
+                        dbTable.nameFrom = messageInfoModel.nameFrom;
+                        dbTable.Date = messageInfoModel.Date;
+                        dbTable.Text = messageInfoModel.Text;
+                        dbTable.TextPhoto = messageInfoModel.TextPhoto;
+                        dbTable.Answers = null;
+                        dbTable.Comments = null;
+                        dbTable.isCheck = false;
+                        dbTable.Status = 0;
+                    }
+                }
+                else
+                {
+                    //POST
                     dbTable.BotId = messageInfoModel.BotId;
                     dbTable.ChatId = messageInfoModel.ChatId;
                     dbTable.MessageId = messageInfoModel.MessageId;
@@ -310,28 +446,9 @@ namespace web_app.Model
                     dbTable.Comments = null;
                     dbTable.isCheck = false;
                     dbTable.Status = 0;
+                    _context.MessageInfo.Add(dbTable);
+                    _context.SaveChanges();
                 }
-            }
-            else
-            {
-                //POST
-                dbTable.BotId = messageInfoModel.BotId;
-                dbTable.ChatId = messageInfoModel.ChatId;
-                dbTable.MessageId = messageInfoModel.MessageId;
-                dbTable.Type = messageInfoModel.Type;
-                dbTable.Username = messageInfoModel.Username;
-                dbTable.UserId = messageInfoModel.UserId;
-                dbTable.UserAvatar = messageInfoModel.UserAvatar;
-                dbTable.nameFrom = messageInfoModel.nameFrom;
-                dbTable.Date = messageInfoModel.Date;
-                dbTable.Text = messageInfoModel.Text;
-                dbTable.TextPhoto = messageInfoModel.TextPhoto;
-                dbTable.Answers = null;
-                dbTable.Comments = null;
-                dbTable.isCheck = false;
-                dbTable.Status = 0;
-                _context.MessageInfo.Add(dbTable);
-                _context.SaveChanges();
             }
 
         }
