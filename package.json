@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "name": "n-s-c",
   "version": "0.1.0",
   "private": true,
@@ -37,10 +36,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-=======
-  "scripts": {
-    "client": "cd frontend && npm start",
-    "backend": "cd backend/backend && dotnet run "
->>>>>>> 404be9935cf90807557cd3ccf0542dc17cf499dd
   }
 }

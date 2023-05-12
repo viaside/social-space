@@ -1,16 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
-import { update } from './redux/slice/MessageSlice'
+import { getMessageAsync } from './redux/slice/messageSlice';
 
 import "./App.css"
 
 function App() {
-
-  
+  //redux 
+  const Message = useSelector((state) => state.Message.data);
+  const dispatch = useDispatch()
 
   return (
-    <button>Загрузить</button>
+    <>
+    { Message.map(element => {
+      return <p>{element.text}</p>
+    }) }
+    
+    <button onClick={async () => { dispatch(getMessageAsync()) }}>Загрузить</button>
+    </>
   );
 }
 
