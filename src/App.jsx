@@ -1,23 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { Route, Routes,  BrowserRouter} from 'react-router-dom';
 
-import { useSelector, useDispatch } from 'react-redux'
-import { getMessageAsync } from './redux/slice/messageSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { getMessageAsync } from './redux/slice/messageSlice.js';
+import AppRoutes from "./AppRoutes.js";
 
 import "./App.css"
 
 function App() {
   //redux 
-  const Message = useSelector((state) => state.Message.data);
-  const dispatch = useDispatch()
+  // const Message = useSelector((state) => state.Message.data);
+  const dispatch = useDispatch();
+
+  
+  useEffect(() => {
+    const websocket = new WebSocket('wss://localhost:8443/api/webhook/connect');
+
+    websocket.onopen = () => {
+      dispatch(getMessageAsync());
+    }
+    
+    websocket.onmessage = () => {
+      dispatch(getMessageAsync());
+    }
+  }, []);
 
   return (
-    <>
-    { Message.map(element => {
-      return <p>{element.text}</p>
-    }) }
-    
-    <button onClick={async () => { dispatch(getMessageAsync()) }}>Загрузить</button>
-    </>
+    <BrowserRouter>
+      <Routes>
+        {AppRoutes.map((route, index) => {
+          const { element, ...rest } = route;
+          return <Route key={index} {...rest} element={element} />;
+        })}
+      </Routes>
+    </BrowserRouter>    
   );
 }
 

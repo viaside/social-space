@@ -1,5 +1,6 @@
 {
   "name": "n-s-c",
+  "backend": "https://localhost:8443",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
