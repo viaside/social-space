@@ -36,6 +36,8 @@ export const getMessageAsync = (data) => async (dispatch) => {
         }
       };
 
+
+      // sorting message by data
       Result.sort(function(a,b){
         if(a.date < b.date) return 1;
         if(a.date > b.date) return -1;
