@@ -4,6 +4,7 @@ import { Route, Routes,  BrowserRouter} from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getMessageAsync } from './redux/slice/messageSlice.js';
 import AppRoutes from "./AppRoutes.js";
+import Navbar from "./component/Navbar.jsx";
 
 import "./App.css"
 
@@ -33,6 +34,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Navbar/>
       <Routes>
         {AppRoutes.map((route, index) => {
           const { element, ...rest } = route;
