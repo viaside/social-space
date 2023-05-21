@@ -1,13 +1,13 @@
 import React from "react";
 
-import Message from "../component/PrivateChat/Message";
+import Messages from "../component/PrivateChat/Messages";
 import Dialog from "../component/PrivateChat/Dialog";
 import History from "../component/PrivateChat/History";
 
 export default function PrivateChat() {
     return (
         <div>
-            <Message/>
+            <Messages/>
             <Dialog/>
             <History/>
         </div>

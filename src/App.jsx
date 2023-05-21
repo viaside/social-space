@@ -11,26 +11,26 @@ import "./App.css"
 function App() {
   //redux 
   // const Message = useSelector((state) => state.Message.data);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  // load message to redux state
-  dispatch(getMessageAsync());
+  // // load message to redux state
+  // dispatch(getMessageAsync());
 
   
-  useEffect(() => {
-    // connect/subscribe to backend websocket
-    const websocket = new WebSocket('wss://localhost:8443/api/webhook/connect');
+  // useEffect(() => {
+  //   // connect/subscribe to backend websocket
+  //   const websocket = new WebSocket('wss://localhost:8443/api/webhook/connect');
 
-    // when joining
-    websocket.onopen = () => {
-      dispatch(getMessageAsync());
-    }
+  //   // when joining
+  //   websocket.onopen = () => {
+  //     dispatch(getMessageAsync());
+  //   }
     
-    // when update message
-    websocket.onmessage = () => {
-      dispatch(getMessageAsync());
-    }
-  }, []);
+  //   // when update message
+  //   websocket.onmessage = () => {
+  //     dispatch(getMessageAsync());
+  //   }
+  // }, []);
 
   return (
     <BrowserRouter>
