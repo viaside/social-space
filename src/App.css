@@ -1,3 +1,75 @@
 body {
   color: pink;
 }
+
+p{
+    font-size: 18px;
+}
+
+input{
+
+}
+
+button{
+
+}
+
+/* ---------Global component--------- */
+    .Neomorth{
+    
+    }
+
+    .User_Photo{
+        border-radius: 100px;
+    }
+
+    .Mark{
+        border-radius: 100px;
+        background-color: red;
+    }
+
+    .Message{
+        background-color: gray;
+    }
+
+    .Message_Data{
+        text-align: right;
+    }
+
+/* ---------Pages PrivateChat--------- */
+
+    /* Copmonent Dialog */
+        .Dialog{
+            width: 10vw;
+        }
+
+        .Dialog_Element{
+
+        }
+
+
+        .Dialog_Element_Message{
+
+        }
+
+    /* Component Messages */
+        .Messages{
+            width: 80vw;
+        }
+        .Messages_MessageBlock{
+
+        }
+    /* Copmonent History */
+        .History{
+            width: 10vw;
+        }
+
+        .History_User{
+
+        }
+
+        .History_UserMessage{
+
+        }
+
+/* ---------Pages GroupChat--------- */
