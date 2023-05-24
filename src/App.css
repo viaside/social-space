@@ -1,9 +1,26 @@
+:root {
+    --color-bg: #F0F0F3;
+    --color-active: #E2E2E4;
+    --color-bg-message: #E2E2E4;
+    --color-text: #5B5B5B;
+
+}
+
+@font-face {
+    font-family: "inter-regular"; 
+    src: url("../fonts/Inter-Regular.ttf") format("truetype"); 
+    font-style: normal; 
+    font-weight: normal; 
+    } 
+
 body {
-  color: pink;
+    padding: 0;
+    margin: 0;
 }
 
 p{
-    font-size: 18px;
+    font-size: 14px;
+    font-family: "inter-regular"; 
 }
 
 input{
@@ -24,12 +41,15 @@ button{
     }
 
     .Mark{
+        padding: 2px 7px 2px 7px;
         border-radius: 100px;
-        background-color: red;
+        /* background-color: rgb(253, 151, 151); */
+        text-align: center;
+        /* color: white; */
     }
 
     .Message{
-        background-color: gray;
+        /* background-color: gray; */
     }
 
     .Message_Data{
@@ -41,15 +61,22 @@ button{
     /* Copmonent Dialog */
         .Dialog{
             width: 10vw;
+            background-color: var(--color-bg);
+            
         }
 
         .Dialog_Element{
-
+            background-color: var(--color-active);
+            color: var(--color-text); 
+            height: 70px;
         }
 
-
         .Dialog_Element_Message{
-
+            display: flex;
+            align-items: center;
+            /* background-color: white;
+            border: 0px solid white; */
+            border-radius: 10px;
         }
 
     /* Component Messages */

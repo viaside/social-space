@@ -6,10 +6,10 @@ import History from "../component/PrivateChat/History";
 
 export default function PrivateChat() {
     return (
-        <div>
-            <Messages/>
+        <div style={{display: "flex"}}>
             <Dialog/>
-            <History/>
+            {/* <Messages/>
+            <History/> */}
         </div>
     )
 }
